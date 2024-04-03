@@ -1,0 +1,90 @@
+#
+#  Part of kf5-servicemenus-imagetools
+#  Copyright (c) 2021-2023 by Marco Nelles <dev at maniatek dot de>
+#  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+[Desktop Entry]
+Actions=jpeg_progressive;jpeg_optimize;jpeg_optimize_topublish_fullhd;_SEPARATOR_;jpeg_reencode_50;jpeg_reencode_70;jpeg_reencode_80;jpeg_reencode_90;jpeg_custom_reencode;
+MimeType=image/jpeg
+Name=JPEG tools service menu
+ServiceTypes=KonqPopupMenu/Plugin,image/jpeg
+TryExec=imagetools-kdialog
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Image processing (JPEG)
+X-KDE-Submenu[de]=Bildbearbeitung (JPEG)
+
+################################################################################
+
+[Desktop Action jpeg_progressive]
+Exec=imagetools-kdialog jpeg_progressive %F
+Icon=viewhtml
+Terminal=false
+Type=Application
+Name=Make progressive
+Name[de]=Progressiv kodieren
+
+[Desktop Action jpeg_optimize]
+Exec=imagetools-kdialog jpeg_optimize %F
+Icon=viewhtml
+Terminal=false
+Type=Application
+Name=Optimized reencoding (lossy)
+Name[de]=Optimierte Rekodierung (verlustbehaftet)
+
+[Desktop Action jpeg_optimize_topublish_fullhd]
+Exec=imagetools-kdialog jpeg_optimize_topublish 1920 %F
+Icon=viewhtml
+Terminal=false
+Type=Application
+Name=Optimization for publishing (lossy)
+Name[de]=Optimierung für Veröffentlichungen oder Weitergaben (verlustbehaftet)
+
+[Desktop Action jpeg_reencode_50]
+Exec=imagetools-kdialog jpeg_reencode 50% %F
+Terminal=false
+Type=Application
+Name=Reencode at quality 50%
+Name[de]=Rekodierung mit 50% Qualität
+
+[Desktop Action jpeg_reencode_70]
+Exec=imagetools-kdialog jpeg_reencode 70% %F
+Terminal=false
+Type=Application
+Name=Reencode at quality 70%
+Name[de]=Rekodierung mit 70% Qualität
+
+[Desktop Action jpeg_reencode_80]
+Exec=imagetools-kdialog jpeg_reencode 80% %F
+Terminal=false
+Type=Application
+Name=Reencode at quality 80%
+Name[de]=Rekodierung mit 80% Qualität
+
+[Desktop Action jpeg_reencode_90]
+Exec=imagetools-kdialog jpeg_reencode 90% %F
+Terminal=false
+Type=Application
+Name=Reencode at quality 90%
+Name[de]=Rekodierung mit 90% Qualität
+
+[Desktop Action jpeg_custom_reencode]
+Exec=imagetools-kdialog jpeg_reencode custom %F
+Terminal=false
+Type=Application
+Name=Custom quality
+Name[de]=Benutzerdefinierte Qualität

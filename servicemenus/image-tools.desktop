@@ -1,0 +1,283 @@
+#
+#  Part of kf5-servicemenus-imagetools
+#  Copyright (c) 2021-2023 by Marco Nelles <dev at maniatek dot de>
+#  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+[Desktop Entry]
+Actions=convert_gif;convert_jpeg;convert_png;convert_tiff;convert_webp;convert_custom;_SEPARATOR_;resize_25;resize_50;resize_75;_SEPARATOR_;resize_640;resize_1024;resize_1200;resize_1600;resize_2048;resize_3072;resize_4096;resize_custom;_SEPARATOR_;rotate_90;rotate_180;rotate_270;rotate_custom;_SEPARATOR_;mirror_flip;mirror_flop;_SEPARATOR_;strip;_SEPARATOR_;gen_icon;gen_icon_rectangle;gen_favicon;_SEPARATOR_;gen_optimized_text_img
+MimeType=image/*
+Name=image tools service menu
+ServiceTypes=KonqPopupMenu/Plugin,image/*
+TryExec=imagetools-kdialog
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Image processing
+X-KDE-Submenu[de]=Bildbearbeitung
+
+################################################################################
+
+[Desktop Action convert_gif]
+Exec=imagetools-kdialog convert gif %F
+Icon=image-gif
+Terminal=false
+Type=Application
+Name=Convert to GIF
+Name[de]=In GIF umwandeln
+
+[Desktop Action convert_jpeg]
+Exec=imagetools-kdialog convert jpg %F
+Icon=image-jpeg
+Terminal=false
+Type=Application
+Name=Convert to JPEG
+Name[de]=In JPEG umwandeln
+
+[Desktop Action convert_png]
+Exec=imagetools-kdialog convert png %F
+Icon=image-png
+Terminal=false
+Type=Application
+Name=Convert to PNG
+Name[de]=In PNG umwandeln
+
+[Desktop Action convert_tiff]
+Exec=imagetools-kdialog convert tif %F
+Icon=image-tiff
+Terminal=false
+Type=Application
+Name=Convert to TIFF
+Name[de]=In TIFF umwandeln
+
+[Desktop Action convert_webp]
+Exec=imagetools-kdialog convert webp %F
+Icon=image-webp
+Terminal=false
+Type=Application
+Name=Convert to WebP
+Name[de]=In WebP umwandeln
+
+[Desktop Action convert_custom]
+Exec=imagetools-kdialog convert custom %F
+Icon=image
+Terminal=false
+Type=Application
+Name=Convert to...
+Name[de]=Benutzerdefinierte Umwandlung...
+
+################################################################################
+
+[Desktop Action resize_25]
+Exec=imagetools-kdialog resize 25% %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 25%
+Name[de]=Auf 25% skalieren
+
+[Desktop Action resize_50]
+Exec=imagetools-kdialog resize 50% %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 50%
+Name[de]=Auf 50% skalieren
+
+[Desktop Action resize_75]
+Exec=imagetools-kdialog resize 75% %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 75%
+Name[de]=Auf 75% skalieren
+
+################################################################################
+
+[Desktop Action resize_640]
+Exec=imagetools-kdialog resize 640px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 640px (longer edge)
+Name[de]=Auf 640px skalieren (längere Seite)
+
+[Desktop Action resize_1024]
+Exec=imagetools-kdialog resize 1024px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 1024px (longer edge)
+Name[de]=Auf 1024px skalieren (längere Seite)
+
+[Desktop Action resize_1200]
+Exec=imagetools-kdialog resize 1200px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 1200px (longer edge)
+Name[de]=Auf 1200px skalieren (längere Seite)
+
+[Desktop Action resize_1600]
+Exec=imagetools-kdialog resize 1600px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 1600px (longer edge)
+Name[de]=Auf 1600px skalieren (längere Seite)
+
+[Desktop Action resize_1920]
+Exec=imagetools-kdialog resize 1920px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 1920px (longer edge)
+Name[de]=Auf 1920px skalieren (längere Seite)
+
+[Desktop Action resize_2048]
+Exec=imagetools-kdialog resize 2048px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 2048px (longer edge)
+Name[de]=Auf 2048px skalieren (längere Seite)
+
+[Desktop Action resize_3072]
+Exec=imagetools-kdialog resize 3072px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 3072px (longer edge)
+Name[de]=Auf 3072px skalieren (längere Seite)
+
+[Desktop Action resize_4096]
+Exec=imagetools-kdialog resize 4096px %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Resize at 4096px (longer edge)
+Name[de]=Auf 4096px skalieren (längere Seite)
+
+[Desktop Action custom_resize]
+Exec=imagetools-kdialog resize custom %F
+Icon=image-resize-symbolic
+Terminal=false
+Type=Application
+Name=Custom resize
+Name[de]=Benutzerdefinierte Größe
+
+################################################################################
+
+[Desktop Action rotate_90]
+Exec=imagetools-kdialog rotate 90 %F
+Icon=image-rotate-right-symbolic
+Terminal=false
+Type=Application
+Name=Rotate 90° (right)
+Name[de]=Um 90° rotieren (rechts)
+
+[Desktop Action rotate_180]
+Exec=imagetools-kdialog rotate 180 %F
+Icon=image-rotate-right-symbolic
+Terminal=false
+Type=Application
+Name=Rotate 180°
+Name[de]=Um 180° rotieren
+
+[Desktop Action rotate_270]
+Exec=imagetools-kdialog rotate 270 %F
+Icon=image-rotate-left-symbolic
+Terminal=false
+Type=Application
+Name=Rotate -90° (left)
+Name[de]=Um -90° rotieren (links)
+
+[Desktop Action rotate_custom]
+Exec=imagetools-kdialog rotate custom %F
+Icon=view-refresh
+Terminal=false
+Type=Application
+Name=Rotate custom...
+Name[de]=Benutzerdefiniert rotieren...
+
+[Desktop Action rotate_auto]
+Exec=imagetools-kdialog rotate auto %F
+Icon=view-refresh
+Terminal=false
+Type=Application
+Name=Auto-rotate with Exif
+Name[de]=Auto-Rotation aufgrund Exif-Daten
+
+################################################################################
+
+[Desktop Action mirror_flip]
+Exec=imagetools-kdialog overturn flip %F
+Icon=image-flip-vertical-symbolic
+Terminal=false
+Type=Application
+Name=Mirror vertically
+Name[de]=Vertikal spiegeln
+
+[Desktop Action mirror_flop]
+Exec=imagetools-kdialog overturn flop %F
+Icon=image-flip-horizontal-symbolic
+Terminal=false
+Type=Application
+Name=Mirror horizontally
+Name[de]=Horizontal spiegeln
+
+################################################################################
+
+[Desktop Action strip]
+Exec=imagetools-kdialog strip %F
+Icon=knotes_date
+Terminal=false
+Type=Application
+Name=Strip all (unnecessary) metadata
+Name[de]=Alle Metadaten entfernen
+
+################################################################################
+
+[Desktop Action gen_icon]
+Exec=imagetools-kdialog gen_icon %F
+Icon=image-ico
+Terminal=false
+Type=Application
+Name=Generate icon (PNG, 360x360px)
+Name[de]=Icon generieren (PNG, 360x360px)
+
+[Desktop Action gen_icon_rectangle]
+Exec=imagetools-kdialog gen_icon_rectangle %F
+Icon=image-ico
+Terminal=false
+Type=Application
+Name=Generate icon (PNG, 440x360px)
+Name[de]=Icon generieren (PNG, 440x360px)
+
+[Desktop Action gen_favicon]
+Exec=imagetools-kdialog gen_favicon %F
+Icon=image-ico
+Terminal=false
+Type=Application
+Name=Generate favicon
+Name[de]=Favicon generieren
+
+[Desktop Action gen_optimized_text_img]
+Exec=imagetools-kdialog gen_optimized_text_img %F
+Icon=text-x-plain
+Terminal=false
+Type=Application
+Name=Gnerate optimized text images
+Name[de]=Bild für Text optimieren
