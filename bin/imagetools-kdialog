@@ -155,6 +155,8 @@ if [ -z "${kdialog_bin}" ]; then
     exit 2
 fi
 
+echo 123
+
 mogrify_bin=$(which mogrify)
 if [ -z "${mogrify_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_imagemagick_not_found_text}"
@@ -179,7 +181,7 @@ if [ -z "${optipng_bin}" ]; then
     exit 2
 fi
 
-qdbus_bin=$(which qdbus)
+qdbus_bin=$(which qdbus6)
 if [ -z "${qdbus_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_qdbus_not_found_text}"
     exit 2
