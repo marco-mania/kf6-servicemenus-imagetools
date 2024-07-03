@@ -94,6 +94,8 @@ function load_lang() {
             msg_common_imagemagick_not_found_text="ImageMagick not found."
             msg_common_exiftool_not_found_text="ExifTool not found."
             msg_common_optipng_not_found_text="OptiPNG not found."
+            msg_common_qdbus_not_found_text="Qdbus not found."
+
 
             msg_common_abort="Operation interrupted by user."
             msg_common_overwrite_text="Do you want to overwrite the original file(s)? Otherwise a new file with a filename suffix will be created."
@@ -181,10 +183,13 @@ if [ -z "${optipng_bin}" ]; then
     exit 2
 fi
 
-qdbus_bin=$(which qdbus6)
+qdbus_bin=$(which qdbus)
 if [ -z "${qdbus_bin}" ]; then
-    "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_qdbus_not_found_text}"
-    exit 2
+    qdbus_bin=$(which qdbus6)
+    if [ -z "${qdbus_bin}" ]; then
+        "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_qdbus_not_found_text}"
+        exit 2
+    fi
 fi
 
 ## exec functions
