@@ -13,12 +13,13 @@ Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+
 * [ImageMagick](https://imagemagick.org/index.php)
 * [ExifTool](https://exiftool.org/)
 * [OptiPNG](http://optipng.sourceforge.net/)
+* [pngquant](https://pngquant.org/)
 
 ## Installation (Plasma 6)
 
 Install the requirements (Arch Linux):
 
-    sudo pacman -S imagemagick perl-image-exiftool optipng qt5-tools
+    sudo pacman -S imagemagick perl-image-exiftool optipng pngquant qt6-tools
 
 To install system wide:
 

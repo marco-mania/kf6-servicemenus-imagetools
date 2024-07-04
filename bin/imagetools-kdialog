@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 #
 #  Part of kf5-servicemenus-imagetools
-#  Copyright (c) 2021-2023 by Marco Nelles <dev at maniatek dot de>
+#  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
 #  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -59,6 +59,8 @@ Commands:
 
     png_optimize
         Optimize PNG encoding (lossless)
+    png_recompress_lossy_small
+        Recompress for minimal file size (lossy)
 
     strip
         Remove all unnecessary metadata
@@ -94,6 +96,7 @@ function load_lang() {
             msg_common_imagemagick_not_found_text="ImageMagick not found."
             msg_common_exiftool_not_found_text="ExifTool not found."
             msg_common_optipng_not_found_text="OptiPNG not found."
+            msg_common_pngquant_not_found_text="pngquant not found."
             msg_common_qdbus_not_found_text="Qdbus not found."
 
 
@@ -130,7 +133,8 @@ function load_lang() {
             msg_jpeg_reencode_title="Reencoding of jpegs"
             msg_jpeg_reencode_quality_text="Type the quality in percent:"
 
-            msg_png_optimize_title="Optimizing of pngs"
+            msg_png_optimize_title="Optimizing of png files"
+            msg_png_recompress_lossy_small="Recompression of png files"
 
             msg_strip_title="Striping of metadata from images"
 
@@ -157,8 +161,6 @@ if [ -z "${kdialog_bin}" ]; then
     exit 2
 fi
 
-echo 123
-
 mogrify_bin=$(which mogrify)
 if [ -z "${mogrify_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_imagemagick_not_found_text}"
@@ -180,6 +182,12 @@ fi
 optipng_bin=$(which optipng)
 if [ -z "${optipng_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_optipng_not_found_text}"
+    exit 2
+fi
+
+pngquant_bin=$(which pngquant)
+if [ -z "${optipng_bin}" ]; then
+    "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_pngquant_not_found_text}"
     exit 2
 fi
 
@@ -420,6 +428,26 @@ exec_png_optimize() {
 
 }
 
+exec_png_recompress_lossy_small() {
+
+    local inputfile="$1"
+
+    local dir
+    dir=$(dirname -- "${inputfile}")
+    local name="${inputfile##*/}"
+    local base="${name%.*}"
+    local ext="${name##*.}"
+
+    if [ "${overwrite}" = true ]; then
+        OUTPUT=$("${pngquant_bin}" "${inputfile}" 2>&1)
+    else
+        OUTPUT=$("${pngquant_bin}" -out "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
+    fi
+
+    return $?
+
+}
+
 exec_strip() {
 
     local inputfile="$1"
@@ -607,6 +635,9 @@ iterate_files() {
         png_optimize)
             exec_png_optimize "${file}"
             ;;
+        png_recompress_lossy_small)
+            exec_png_recompress_lossy_small "${file}"
+            ;;
         strip)
             exec_strip "${file}"
             ;;
@@ -769,6 +800,13 @@ init_png_optimize() {
 
 }
 
+init_png_recompress_lossy_small() {
+
+    flag_ask_overwrite=true
+    iterate_files "${@}"
+
+}
+
 init_strip() {
 
     iterate_files "${@}"
@@ -851,6 +889,10 @@ jpeg_reencode)
 png_optimize)
     msg_title="${msg_png_optimize_title}"
     init_png_optimize "${@}"
+    ;;
+png_recompress_lossy_small)
+    msg_title="${msg_png_recompress_lossy_small}"
+    init_png_recompress_lossy_small "${@}"
     ;;
 strip)
     msg_title="${msg_strip_title}"
