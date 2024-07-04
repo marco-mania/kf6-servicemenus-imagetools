@@ -18,7 +18,7 @@
 #
 
 [Desktop Entry]
-Actions=png_optimize;
+Actions=png_optimize;png_recompress_lossy_small;
 MimeType=image/png
 Name=PNG tools service menu
 ServiceTypes=KonqPopupMenu/Plugin,image/png

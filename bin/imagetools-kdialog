@@ -441,7 +441,7 @@ exec_png_recompress_lossy_small() {
     if [ "${overwrite}" = true ]; then
         OUTPUT=$("${pngquant_bin}" "${inputfile}" 2>&1)
     else
-        OUTPUT=$("${pngquant_bin}" -out "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
+        OUTPUT=$("${pngquant_bin}" --output "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
     fi
 
     return $?
