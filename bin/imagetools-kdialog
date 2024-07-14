@@ -46,10 +46,8 @@ Commands:
         Mirror image. flip: mirror in the vertical axis, flop:
         mirror in the horizintal axis.
 
-    jpeg_makeprogressive
+    jpeg_make_progressive
         Encode JPEG progressive
-    jpeg_optimize
-        Optimized JPEG reencoding with quality value 80% (lossy)
     jpeg_prepare_to_publish <\$y>
         Reduce JPEG to \$y px on the longer side,
         reencode JPEG with quality value 70% (lossy) and
@@ -76,7 +74,6 @@ Commands:
         generate optimized text image
 
 Examples:
-    ${PROGNAME} jpeg_optimize /path/to/image1.jpg /path/to/image2.jpg
     ${PROGNAME} jpeg_reencode 50% /path/to/image1.jpg
     ${PROGNAME} resize 1920p /path/to/image1.jpg
     ${PROGNAME} resize custom /path/to/image1.jpg
@@ -124,9 +121,7 @@ function load_lang() {
 
             msg_mirror_title="Mirroring of images"
 
-            msg_jpeg_makeprogressive_title="Make jpeg files progressive"
-
-            msg_jpeg_optimize_title="Optimized reencoding of jpeg files"
+            msg_jpeg_make_progressive_title="Make jpeg files progressive"
 
             msg_jpeg_prepare_to_publish_title="Prepare jpegs for publishing"
             msg_jpeg_prepare_to_publish_title_scale_text="Type the width in px for the longer side:"
@@ -329,27 +324,6 @@ exec_jpeg_reencode() {
     return $?
 }
 
-exec_jpeg_optimize() {
-
-    local inputfile="$1"
-
-    local dir
-    dir=$(dirname -- "${inputfile}")
-    local name="${inputfile##*/}"
-    local base="${name%.*}"
-    local ext="${name##*.}"
-
-    OUTPUT=$("${cjpegli_bin}" -q 80 "${inputfile}" "${dir}/${base}_optimized.${ext}" 2>&1)
-
-    if [ "${overwrite}" = true ] && [ $? -eq 0 ]; then
-        rm "${inputfile}"
-        mv "${dir}/${base}_optimized.${ext}" "${inputfile}"
-    fi
-
-    return $?
-
-}
-
 exec_jpeg_prepare_to_publish() {
 
     local inputfile="$1"
@@ -401,7 +375,7 @@ exec_jpeg_prepare_to_publish() {
 
 }
 
-exec_jpeg_makeprogressive() {
+exec_jpeg_make_progressive() {
 
     local inputfile="$1"
 
@@ -633,11 +607,8 @@ iterate_files() {
         mirror)
             exec_mirror "${file}"
             ;;
-        jpeg_makeprogressive)
-            exec_jpeg_makeprogressive "${file}"
-            ;;
-        jpeg_optimize)
-            exec_jpeg_optimize "${file}"
+        jpeg_make_progressive)
+            exec_jpeg_make_progressive "${file}"
             ;;
         jpeg_prepare_to_publish)
             exec_jpeg_prepare_to_publish "${file}"
@@ -774,13 +745,6 @@ init_jpeg_reencode() {
 
 }
 
-init_jpeg_optimize() {
-
-    flag_ask_overwrite=true
-    iterate_files "${@}"
-
-}
-
 init_jpeg_prepare_to_publish() {
 
     value="${1}"
@@ -799,7 +763,7 @@ init_jpeg_prepare_to_publish() {
 
 }
 
-init_jpeg_makeprogressive() {
+init_jpeg_make_progressive() {
 
     flag_ask_overwrite=true
     iterate_files "${@}"
@@ -883,13 +847,9 @@ mirror)
     msg_title="${msg_mirror_title}"
     init_mirror "${@}"
     ;;
-jpeg_makeprogressive)
-    msg_title="${msg_jpeg_makeprogressive_title}"
-    init_jpeg_makeprogressive "${@}"
-    ;;
-jpeg_optimize)
-    msg_title="${msg_jpeg_optimize_title}"
-    init_jpeg_optimize "${@}"
+jpeg_make_progressive)
+    msg_title="${msg_jpeg_make_progressive_title}"
+    init_jpeg_make_progressive "${@}"
     ;;
 jpeg_prepare_to_publish)
     msg_title="${msg_jpeg_prepare_to_publish_title}"
