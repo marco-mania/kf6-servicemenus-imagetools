@@ -31,7 +31,7 @@ X-KDE-Submenu[de]=Bildbearbeitung (JPEG)
 ################################################################################
 
 [Desktop Action jpeg_progressive]
-Exec=imagetools-kdialog jpeg_progressive %F
+Exec=imagetools-kdialog jpeg_make_progressive %F
 Icon=viewhtml
 Terminal=false
 Type=Application
