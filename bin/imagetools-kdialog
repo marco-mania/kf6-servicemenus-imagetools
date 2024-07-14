@@ -49,10 +49,10 @@ Commands:
     jpeg_makeprogressive
         Encode JPEG progressive
     jpeg_optimize
-        Optimized JPEG reencoding with quality value 82% (lossy)
-    jpeg_optimize_topublish <\$y>
+        Optimized JPEG reencoding with quality value 80% (lossy)
+    jpeg_prepare_to_publish <\$y>
         Reduce JPEG to \$y px on the longer side,
-        reencode JPEG progressive with quality value 76% (lossy) and
+        reencode JPEG with quality value 70% (lossy) and
         remove all unnecessary metadata (strip)
     jpeg_reencode <\$percent|custom>
         Reencode JPEG with new quality value
@@ -94,6 +94,7 @@ function load_lang() {
             msg_common_dependency_check_failed_title="Dependency check failed"
             msg_common_kdialog_not_found_text="kdialog not found. Assuming KDE environment."
             msg_common_imagemagick_not_found_text="ImageMagick not found."
+            msg_common_cjpegli_not_found_text="cjpegli not found."
             msg_common_exiftool_not_found_text="ExifTool not found."
             msg_common_optipng_not_found_text="OptiPNG not found."
             msg_common_pngquant_not_found_text="pngquant not found."
@@ -127,8 +128,8 @@ function load_lang() {
 
             msg_jpeg_optimize_title="Optimized reencoding of jpeg files"
 
-            msg_jpeg_optimizetopublish_title="Optimizing of jpegs for publishing"
-            msg_jpeg_optimizetopublish_title_scale_text="Type the width in px for the longer side:"
+            msg_jpeg_prepare_to_publish_title="Prepare jpegs for publishing"
+            msg_jpeg_prepare_to_publish_title_scale_text="Type the width in px for the longer side:"
 
             msg_jpeg_reencode_title="Reencoding of jpegs"
             msg_jpeg_reencode_quality_text="Type the quality in percent:"
@@ -170,6 +171,12 @@ fi
 convert_bin=$(which convert)
 if [ -z "${convert_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_imagemagick_not_found_text}"
+    exit 2
+fi
+
+cjpegli_bin=$(which cjpegli)
+if [ -z "${cjpegli_bin}" ]; then
+    "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_cjpegli_not_found_text}"
     exit 2
 fi
 
@@ -312,10 +319,11 @@ exec_jpeg_reencode() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    if [ "${overwrite}" = true ]; then
-        OUTPUT=$("${mogrify_bin}" -quality "${quality}" "${inputfile}" 2>&1)
-    else
-        OUTPUT=$("${convert_bin}" -quality "${quality}" "${inputfile}" "${dir}/${base}_reencoded_${quality}.${ext}" 2>&1)
+    OUTPUT=$("${cjpegli_bin}" -q 80 "${inputfile}" "${dir}/${base}_reencoded-${quality}.${ext}" 2>&1)
+
+    if [ "${overwrite}" = true ] && [ $? -eq 0 ]; then
+        rm "${inputfile}"
+        mv "${dir}/${base}_reencoded-${quality}.${ext}" "${inputfile}"
     fi
 
     return $?
@@ -331,18 +339,18 @@ exec_jpeg_optimize() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    ## https://www.smashingmagazine.com/2015/06/efficient-image-resizing-with-imagemagick/
-    if [ "${overwrite}" = true ]; then
-        OUTPUT=$("${mogrify_bin}" -filter Triangle -define filter:support=2 -unsharp 0.25x0.25+8+0.065 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -colorspace sRGB -strip "${inputfile}" 2>&1)
-    else
-        OUTPUT=$("${convert_bin}" -filter Triangle -define filter:support=2 -unsharp 0.25x0.25+8+0.065 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -colorspace sRGB -strip "${inputfile}" "${dir}/${base}_optimized.${ext}" 2>&1)
+    OUTPUT=$("${cjpegli_bin}" -q 80 "${inputfile}" "${dir}/${base}_optimized.${ext}" 2>&1)
+
+    if [ "${overwrite}" = true ] && [ $? -eq 0 ]; then
+        rm "${inputfile}"
+        mv "${dir}/${base}_optimized.${ext}" "${inputfile}"
     fi
 
     return $?
 
 }
 
-exec_jpeg_optimize_topublish() {
+exec_jpeg_prepare_to_publish() {
 
     local inputfile="$1"
     local width="$WIDTH"
@@ -363,25 +371,30 @@ exec_jpeg_optimize_topublish() {
         return $rc
     fi
 
-    OUTPUT=$("${mogrify_bin}" -filter Triangle -define filter:support=2 -unsharp 0.25x0.25+8+0.065 -dither None -posterize 136 -quality 76 -define jpeg:fancy-upsampling=off -colorspace sRGB -strip -interlace Plane "${tmpfile}" 2>&1)
+    local tmpfile2
+    tmpfile2=$(mktemp -p "${dir}" --suffix=".${ext}")
+
+    OUTPUT=$("${cjpegli_bin}" -q 70 "${tmpfile}" "${tmpfile2}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
+        rm "${tmpfile2}"
         return $rc
     fi
+    rm "${tmpfile}"
 
-    OUTPUT=$("${exiftool_bin}" -all= -overwrite_original -r "${tmpfile}" 2>&1)
+    OUTPUT=$("${exiftool_bin}" -all= -overwrite_original -r "${tmpfile2}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
-        rm "${tmpfile}"
+        rm "${tmpfile2}"
         return $rc
     fi
 
     if [ "${overwrite}" = true ]; then
         rm "${inputfile}"
-        mv "${tmpfile}" "${inputfile}"
+        mv "${tmpfile2}" "${inputfile}"
     else
-        mv "${tmpfile}" "${dir}/${base}_topublish.${ext}"
+        mv "${tmpfile2}" "${dir}/${base}_to_publish.${ext}"
     fi
 
     return 0
@@ -626,8 +639,8 @@ iterate_files() {
         jpeg_optimize)
             exec_jpeg_optimize "${file}"
             ;;
-        jpeg_optimize_topublish)
-            exec_jpeg_optimize_topublish "${file}"
+        jpeg_prepare_to_publish)
+            exec_jpeg_prepare_to_publish "${file}"
             ;;
         jpeg_reencode)
             exec_jpeg_reencode "${file}"
@@ -768,14 +781,14 @@ init_jpeg_optimize() {
 
 }
 
-init_jpeg_optimize_topublish() {
+init_jpeg_prepare_to_publish() {
 
     value="${1}"
     shift
 
     WIDTH="1920"
     if [ "${value}" = "custom" ]; then
-        WIDTH=$("${kdialog_bin}" --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_optimizetopublish_title_scale_text}" "${WIDTH}") ||
+        WIDTH=$("${kdialog_bin}" --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_prepare_to_publish_title_scale_text}" "${WIDTH}") ||
             { "${kdialog_bin}" --title "${msg_title}" --passivepopup "${msg_common_cancel}" 5 && exit 2; }
     else
         WIDTH="${value}"
@@ -878,9 +891,9 @@ jpeg_optimize)
     msg_title="${msg_jpeg_optimize_title}"
     init_jpeg_optimize "${@}"
     ;;
-jpeg_optimize_topublish)
-    msg_title="${msg_jpeg_optimizetopublish_title}"
-    init_jpeg_optimize_topublish "${@}"
+jpeg_prepare_to_publish)
+    msg_title="${msg_jpeg_prepare_to_publish_title}"
+    init_jpeg_prepare_to_publish "${@}"
     ;;
 jpeg_reencode)
     msg_title="${msg_jpeg_reencode_title}"

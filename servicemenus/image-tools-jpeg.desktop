@@ -18,7 +18,7 @@
 #
 
 [Desktop Entry]
-Actions=jpeg_progressive;jpeg_optimize;jpeg_optimize_topublish_fullhd;_SEPARATOR_;jpeg_reencode_50;jpeg_reencode_70;jpeg_reencode_80;jpeg_reencode_90;jpeg_custom_reencode;
+Actions=jpeg_progressive;jpeg_optimize;jpeg_prepare_to_publish_fullhd;_SEPARATOR_;jpeg_reencode_50;jpeg_reencode_70;jpeg_reencode_80;jpeg_reencode_90;jpeg_custom_reencode;
 MimeType=image/jpeg
 Name=JPEG tools service menu
 ServiceTypes=KonqPopupMenu/Plugin,image/jpeg
@@ -46,13 +46,13 @@ Type=Application
 Name=Optimized reencoding (lossy)
 Name[de]=Optimierte Rekodierung (verlustbehaftet)
 
-[Desktop Action jpeg_optimize_topublish_fullhd]
-Exec=imagetools-kdialog jpeg_optimize_topublish 1920 %F
+[Desktop Action jpeg_prepare_to_publish_fullhd]
+Exec=imagetools-kdialog jpeg_prepare_to_publish 1920 %F
 Icon=viewhtml
 Terminal=false
 Type=Application
-Name=Optimization for publishing (lossy)
-Name[de]=Optimierung für Veröffentlichungen oder Weitergaben (verlustbehaftet)
+Name=Prepare for publishing (lossy)
+Name[de]=Vorbereitung für Veröffentlichungen oder Weitergaben (verlustbehaftet)
 
 [Desktop Action jpeg_reencode_50]
 Exec=imagetools-kdialog jpeg_reencode 50% %F

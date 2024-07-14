@@ -12,6 +12,7 @@ Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+
 * [KDE](https://www.kde.org/)
 * [ImageMagick](https://imagemagick.org/index.php)
 * [ExifTool](https://exiftool.org/)
+* [JPEG XL reference implementation](https://github.com/libjxl/libjxl)
 * [OptiPNG](http://optipng.sourceforge.net/)
 * [pngquant](https://pngquant.org/)
 
@@ -19,7 +20,7 @@ Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+
 
 Install the requirements (Arch Linux):
 
-    sudo pacman -S imagemagick perl-image-exiftool optipng pngquant qt6-tools
+    sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant qt6-tools
 
 To install system wide:
 
