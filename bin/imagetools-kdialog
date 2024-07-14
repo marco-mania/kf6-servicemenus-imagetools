@@ -104,8 +104,7 @@ function load_lang() {
             msg_common_overwrite_no="No, create new files"
             msg_common_progress_text="Processing file \$i of \$file_count \(\$basename_file\)"
             msg_common_start="Starting."
-            msg_common_finish_ok="Done."
-            msg_common_finish_error="An error has occurred."
+            msg_common_error="An error has occurred."
             msg_common_file_not_found="File \$basename_file not found."
             msg_common_command_not_found_text="The requested command \$command is not implemented."
             msg_common_cancel="Cancel"
@@ -582,7 +581,7 @@ iterate_files() {
     ${qdbus_bin} $dbus_ref org.kde.kdialog.ProgressDialog.showCancelButton true
     i=1
 
-    while [[ "false" == "$(${qdbus_bin} $dbus_ref org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null)" && $i -le $file_count ]]; do
+    while [ "$(${qdbus_bin} $dbus_ref org.kde.kdialog.ProgressDialog.wasCancelled 2>/dev/null)" = "false" ] && (( i <= file_count )); do
 
         local file="${!i}"
         local basename_file
@@ -640,19 +639,17 @@ iterate_files() {
         esac
 
         rc=$?
-        if [ $rc -eq 0 ]; then
-            "${kdialog_bin}" --title "${msg_title}" --passivepopup "${msg_common_finish_ok}" 5
-        else
+        if [ $rc -ne 0 ]; then
             {
                 ${qdbus_bin} $dbus_ref close
-                "${kdialog_bin}" --icon configure --title "${msg_title}" --detailederror "${msg_common_finish_error}" "${OUTPUT}"
+                "${kdialog_bin}" --icon configure --title "${msg_title}" --detailederror "${msg_common_error}" "${OUTPUT}"
                 exit 2
             }
         fi
 
         ${qdbus_bin} $dbus_ref org.freedesktop.DBus.Properties.Set org.kde.kdialog.ProgressDialog value $i
 
-        i=$((i + 1))
+        ((i++))
 
     done
 
