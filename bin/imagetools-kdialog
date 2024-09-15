@@ -201,6 +201,8 @@ if [ -z "${qdbus_bin}" ]; then
     fi
 fi
 
+cjxl_bin=$(which cjxl)
+
 ## exec functions
 
 exec_convert() {
@@ -215,7 +217,11 @@ exec_convert() {
     local ext="${name##*.}"
 
     if [ "${ext}" != "${format}" ]; then
-        OUTPUT=$("${mogrify_bin}" -format "${format}" "${inputfile}" 2>&1)
+        if [ "${format}" == jxl ] && [ ! -z "${cjxl_bin}" ]; then
+            OUTPUT=$("${cjxl_bin}" "${inputfile}" "${dir}/${base}.${format}" 2>&1)
+        else
+            OUTPUT=$("${mogrify_bin}" -format "${format}" "${inputfile}" 2>&1)
+        fi
     fi
 
     return $?
