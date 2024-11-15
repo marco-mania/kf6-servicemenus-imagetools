@@ -44,7 +44,7 @@ Commands:
         Values can be e.g. \"90\" or \"-90\".
     mirror <flip|flop>
         Mirror image. flip: mirror in the vertical axis, flop:
-        mirror in the horizintal axis.
+        mirror in the horizontal axis.
 
     jpeg_make_progressive
         Encode JPEG progressive
@@ -319,7 +319,7 @@ exec_jpeg_reencode() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$("${cjpegli_bin}" -q 80 "${inputfile}" "${dir}/${base}_reencoded-${quality}.${ext}" 2>&1)
+    OUTPUT=$("${cjpegli_bin}" -q ${quality} "${inputfile}" "${dir}/${base}_reencoded-${quality}.${ext}" 2>&1)
 
     if [ "${overwrite}" = true ] && [ $? -eq 0 ]; then
         rm "${inputfile}"
@@ -735,7 +735,7 @@ init_jpeg_reencode() {
     value="${1}"
     shift
 
-    JPEG_QUALITY="70%"
+    JPEG_QUALITY="70"
     if [ "${value}" = "custom" ]; then
         JPEG_QUALITY=$("${kdialog_bin}" --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_reencode_quality_text}" "${JPEG_QUALITY}") ||
             { "${kdialog_bin}" --title "${msg_title}" --passivepopup "${msg_common_cancel}" 5 && exit 2; }
