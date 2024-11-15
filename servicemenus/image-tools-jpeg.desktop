@@ -47,28 +47,28 @@ Name=Prepare for publishing (lossy)
 Name[de]=Vorbereitung für Veröffentlichungen oder Weitergaben (verlustbehaftet)
 
 [Desktop Action jpeg_reencode_50]
-Exec=imagetools-kdialog jpeg_reencode 50% %F
+Exec=imagetools-kdialog jpeg_reencode 50 %F
 Terminal=false
 Type=Application
 Name=Reencode at quality 50%
 Name[de]=Rekodierung mit 50% Qualität
 
 [Desktop Action jpeg_reencode_70]
-Exec=imagetools-kdialog jpeg_reencode 70% %F
+Exec=imagetools-kdialog jpeg_reencode 70 %F
 Terminal=false
 Type=Application
 Name=Reencode at quality 70%
 Name[de]=Rekodierung mit 70% Qualität
 
 [Desktop Action jpeg_reencode_80]
-Exec=imagetools-kdialog jpeg_reencode 80% %F
+Exec=imagetools-kdialog jpeg_reencode 80 %F
 Terminal=false
 Type=Application
 Name=Reencode at quality 80%
 Name[de]=Rekodierung mit 80% Qualität
 
 [Desktop Action jpeg_reencode_90]
-Exec=imagetools-kdialog jpeg_reencode 90% %F
+Exec=imagetools-kdialog jpeg_reencode 90 %F
 Terminal=false
 Type=Application
 Name=Reencode at quality 90%
