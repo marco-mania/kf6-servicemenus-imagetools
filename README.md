@@ -53,6 +53,10 @@ Per user installation:
     rm ~/.local/share/kio/servicemenus/image-tools*.desktop
     rm ~/.local/bin/imagetools-kdialog
 
+## Reset suppressed overwrite dialog decision
+
+Just delete the file `~/.config/servicemenus-imagetools`.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to

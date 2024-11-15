@@ -18,7 +18,7 @@
 #
 
 [Desktop Entry]
-Actions=convert_gif;convert_jpeg;convert_jxl;convert_png;convert_tiff;convert_webp;convert_custom;_SEPARATOR_;resize_25;resize_50;resize_75;_SEPARATOR_;resize_640;resize_1024;resize_1200;resize_1600;resize_2048;resize_3072;resize_4096;resize_custom;_SEPARATOR_;rotate_90;rotate_180;rotate_270;rotate_custom;_SEPARATOR_;mirror_flip;mirror_flop;_SEPARATOR_;strip;_SEPARATOR_;gen_icon;gen_icon_rectangle;gen_favicon;_SEPARATOR_;gen_optimized_text_img
+Actions=convert_gif;convert_jpeg;convert_jxl;convert_png;convert_tiff;convert_webp;convert_custom;_SEPARATOR_;resize_25;resize_50;resize_75;_SEPARATOR_;resize_640;resize_1024;resize_1200;resize_1600;resize_2048;resize_3072;resize_4096;resize_custom;_SEPARATOR_;rotate_90;rotate_180;rotate_270;rotate_custom;_SEPARATOR_;mirror_vertical;mirror_horizontal;_SEPARATOR_;strip;_SEPARATOR_;gen_icon;gen_icon_rectangle;gen_favicon;_SEPARATOR_;gen_optimized_text_img
 MimeType=image/*
 Name=image tools service menu
 ServiceTypes=KonqPopupMenu/Plugin,image/*
@@ -230,16 +230,16 @@ Name[de]=Auto-Rotation aufgrund Exif-Daten
 
 ################################################################################
 
-[Desktop Action mirror_flip]
-Exec=imagetools-kdialog overturn flip %F
+[Desktop Action mirror_vertical]
+Exec=imagetools-kdialog mirror flip %F
 Icon=image-flip-vertical-symbolic
 Terminal=false
 Type=Application
 Name=Mirror vertically
 Name[de]=Vertikal spiegeln
 
-[Desktop Action mirror_flop]
-Exec=imagetools-kdialog overturn flop %F
+[Desktop Action mirror_horizontal]
+Exec=imagetools-kdialog mirror flop %F
 Icon=image-flip-horizontal-symbolic
 Terminal=false
 Type=Application

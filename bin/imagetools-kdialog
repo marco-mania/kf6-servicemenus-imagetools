@@ -113,7 +113,7 @@ function load_lang() {
             msg_convert_format_text="Type the format you want.\nA complete list can be obtained from the shell with: mogrify -list format\nor by consulting the ImageMagick manual."
 
             msg_resize_title="Resizing of images"
-            msg_resize_scale_text="Type the scale factor in percentage or the maximum size in pixel you want for the longer edge.\nValid values can be: 50% or 1920p:"
+            msg_resize_scale_text="Type the scale factor in percentage or the maximum size in pixel you want for the longer edge.\nValid values can be: 50% or 1920px:"
 
             msg_rotate_title="Rotation of images"
             msg_rotate_angle_text="Enter the desired rotation angle in degree:"
@@ -558,7 +558,7 @@ exec_gen_optimized_text_img() {
 
 overwrite_question() {
 
-    "${kdialog_bin}" --icon configure --title "${msg_title}" --warningyesno "${msg_common_overwrite_text}" --yes-label "${msg_common_overwrite_no}" --no-label "${msg_common_overwrite_yes}"
+    "${kdialog_bin}" --icon configure --title "${msg_title}" --dontagain servicemenus-imagetools:nooverwritemsg --warningyesno "${msg_common_overwrite_text}" --yes-label "${msg_common_overwrite_no}" --no-label "${msg_common_overwrite_yes}"
     rc=$?
 
     if [ $rc -eq 1 ]; then
