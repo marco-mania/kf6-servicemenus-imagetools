@@ -22,7 +22,10 @@ readonly PROGNAME="$(basename "$0")"
 
 function help() {
 
-    echo "Image tool collection for KDE service menus.
+    case $1 in
+        en_US | *)
+
+            echo "Image tool collection for KDE service menus.
 
 Usage: ${PROGNAME} \$command --
 
@@ -78,6 +81,10 @@ Examples:
     ${PROGNAME} resize 1920px /path/to/image1.jpg
     ${PROGNAME} resize custom /path/to/image1.jpg
 "
+
+        ;;
+
+    esac
 
 }
 
@@ -830,7 +837,7 @@ shift
 flag_ask_overwrite=false
 
 if [ -z "$command" ]; then
-    help
+    help ${LANGUAGE%%:*}
     exit 0
 fi
 
