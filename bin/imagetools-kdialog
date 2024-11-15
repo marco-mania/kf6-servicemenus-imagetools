@@ -49,7 +49,7 @@ Commands:
     jpeg_make_progressive
         Encode JPEG progressive
     jpeg_prepare_to_publish <\$y>
-        Reduce JPEG to \$y px on the longer side,
+        Reduce JPEG to \$y pixels on the longer side,
         reencode JPEG with quality value 70% (lossy) and
         remove all unnecessary metadata (strip)
     jpeg_reencode <\$percent|custom>
@@ -75,7 +75,7 @@ Commands:
 
 Examples:
     ${PROGNAME} jpeg_reencode 50% /path/to/image1.jpg
-    ${PROGNAME} resize 1920p /path/to/image1.jpg
+    ${PROGNAME} resize 1920px /path/to/image1.jpg
     ${PROGNAME} resize custom /path/to/image1.jpg
 "
 
@@ -743,6 +743,8 @@ init_jpeg_reencode() {
         JPEG_QUALITY="${value}"
     fi
 
+    JPEG_QUALITY=${JPEG_QUALITY/%\%/}
+
     flag_ask_overwrite=true
     iterate_files "${@}"
 
@@ -760,6 +762,9 @@ init_jpeg_prepare_to_publish() {
     else
         WIDTH="${value}"
     fi
+
+    WIDTH=${WIDTH/%px/}
+    WIDTH=${WIDTH/%p/}
 
     flag_ask_overwrite=true
     iterate_files "${@}"
