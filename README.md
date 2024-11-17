@@ -12,11 +12,12 @@ Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+.
 To use these service menus, ensure the following are installed:
 
 - [KDE](https://www.kde.org/)  
-- [ImageMagick](https://imagemagick.org/index.php)  
-- [ExifTool](https://exiftool.org/)  
-- [JPEG XL reference implementation](https://github.com/libjxl/libjxl)  
-- [OptiPNG](http://optipng.sourceforge.net/)  
-- [pngquant](https://pngquant.org/)  
+- [ImageMagick](https://imagemagick.org/index.php)
+- [ExifTool](https://exiftool.org/)
+- [JPEG XL reference implementation](https://github.com/libjxl/libjxl)
+- [OptiPNG](http://optipng.sourceforge.net/)
+- [pngquant](https://pngquant.org/)
+- [Jpegoptim](https://github.com/tjko/jpegoptim)
 
 ---
 
@@ -27,7 +28,7 @@ To use these service menus, ensure the following are installed:
 Use the following command to install the required tools:
 
 ```bash
-sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant qt6-tools
+sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant jpegotim qt6-tools
 ```
 
 ### System-Wide Installation

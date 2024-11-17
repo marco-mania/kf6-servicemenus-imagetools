@@ -57,6 +57,8 @@ Commands:
         remove all unnecessary metadata (strip)
     jpeg_reencode <\$percent|custom>
         Reencode JPEG with new quality value
+    jpeg_optimize_lossless
+        Optimize file size of JPEG without changing image data
 
     png_optimize
         Optimize PNG encoding (lossless)
@@ -102,6 +104,7 @@ function load_lang() {
             msg_common_exiftool_not_found_text="ExifTool not found."
             msg_common_optipng_not_found_text="OptiPNG not found."
             msg_common_pngquant_not_found_text="pngquant not found."
+            msg_common_jpegotim_not_found_text="Jpegotim not found."
             msg_common_qdbus_not_found_text="Qdbus not found."
 
 
@@ -134,6 +137,8 @@ function load_lang() {
 
             msg_jpeg_reencode_title="Reencoding of jpegs"
             msg_jpeg_reencode_quality_text="Type the quality in percent:"
+
+            msg_jpeg_optimize_lossless_title="Optimize file size lossless"
 
             msg_png_optimize_title="Optimizing of png files"
             msg_png_recompress_lossy_small="Recompression of png files"
@@ -194,12 +199,18 @@ if [ -z "${optipng_bin}" ]; then
 fi
 
 pngquant_bin=$(which pngquant)
-if [ -z "${optipng_bin}" ]; then
+if [ -z "${pngquant_bin}" ]; then
     "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_pngquant_not_found_text}"
     exit 2
 fi
 
-qdbus_bin=$(which qdbus)
+jpegoptim_bin=$(which jpegoptim)
+if [ -z "${jpegoptim_bin}" ]; then
+    "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_jpegotim_not_found_text}"
+    exit 2
+fi
+
+qdbus_bin=$(which qdbus 2>/dev/null)
 if [ -z "${qdbus_bin}" ]; then
     qdbus_bin=$(which qdbus6)
     if [ -z "${qdbus_bin}" ]; then
@@ -401,6 +412,30 @@ exec_jpeg_make_progressive() {
         OUTPUT=$("${mogrify_bin}" -strip -interlace Plane "${inputfile}" 2>&1)
     else
         OUTPUT=$("${convert_bin}" -strip -interlace Plane "${inputfile}" "${dir}/${base}_progressive.${ext}" 2>&1)
+    fi
+
+    return $?
+
+}
+
+exec_jpeg_optimize_lossless() {
+
+    local inputfile="$1"
+
+    local dir
+    dir=$(dirname -- "${inputfile}")
+    local name="${inputfile##*/}"
+    local base="${name%.*}"
+    local ext="${name##*.}"
+
+    if [ "${overwrite}" = true ]; then
+        OUTPUT=$("${jpegoptim_bin}" "${inputfile}" 2>&1)
+    else
+        local tmpfile
+        tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
+        cp "${inputfile}" "${tmpfile}"
+        OUTPUT=$("${jpegoptim_bin}" "${tmpfile}" 2>&1)
+        mv "${tmpfile}" "${dir}/${base}_optimized.${ext}"
     fi
 
     return $?
@@ -628,6 +663,9 @@ iterate_files() {
         jpeg_reencode)
             exec_jpeg_reencode "${file}"
             ;;
+        jpeg_optimize_lossless)
+            exec_jpeg_optimize_lossless "${file}"
+            ;;
         png_optimize)
             exec_png_optimize "${file}"
             ;;
@@ -785,6 +823,13 @@ init_jpeg_make_progressive() {
 
 }
 
+init_jpeg_optimize_lossless() {
+
+    flag_ask_overwrite=true
+    iterate_files "${@}"
+
+}
+
 init_png_optimize() {
 
     flag_ask_overwrite=true
@@ -873,6 +918,10 @@ jpeg_prepare_to_publish)
 jpeg_reencode)
     msg_title="${msg_jpeg_reencode_title}"
     init_jpeg_reencode "${@}"
+    ;;
+jpeg_optimize_lossless)
+    msg_title="${msg_jpeg_optimize_lossless_title}"
+    init_jpeg_optimize_lossless "${@}"
     ;;
 png_optimize)
     msg_title="${msg_png_optimize_title}"
