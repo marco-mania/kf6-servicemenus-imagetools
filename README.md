@@ -1,5 +1,3 @@
-Hier ist eine sprachlich verbesserte und leicht überarbeitete Version des Textes:
-
 ---
 
 # KDE Service Menus for Image File Processing
