@@ -1,69 +1,129 @@
-# KDE service menus for image file processing
+Hier ist eine sprachlich verbesserte und leicht überarbeitete Version des Textes:
 
-KDE service menus for image file processing.
+---
 
-* Special functions for JPEG and PNG files
+# KDE Service Menus for Image File Processing
 
-Originally derived from [KDE 5 Service Menu ReImage v2.5](https://www.egregorion.net/),
-Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+
+Enhance your image file workflows with KDE service menus, tailored for efficient processing.
+
+This project is based on [KDE 5 Service Menu ReImage v2.5](https://www.egregorion.net/),  
+Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+.
+
+---
 
 ## Requirements
 
-* [KDE](https://www.kde.org/)
-* [ImageMagick](https://imagemagick.org/index.php)
-* [ExifTool](https://exiftool.org/)
-* [JPEG XL reference implementation](https://github.com/libjxl/libjxl)
-* [OptiPNG](http://optipng.sourceforge.net/)
-* [pngquant](https://pngquant.org/)
+To use these service menus, ensure the following are installed:
+
+- [KDE](https://www.kde.org/)  
+- [ImageMagick](https://imagemagick.org/index.php)  
+- [ExifTool](https://exiftool.org/)  
+- [JPEG XL reference implementation](https://github.com/libjxl/libjxl)  
+- [OptiPNG](http://optipng.sourceforge.net/)  
+- [pngquant](https://pngquant.org/)  
+
+---
 
 ## Installation (Plasma 6)
 
-Install the requirements (Arch Linux):
+### Install Dependencies (Arch Linux)
 
-    sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant qt6-tools
+Use the following command to install the required tools:
 
-To install system wide:
+```bash
+sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant qt6-tools
+```
 
-    sudo cp servicemenus/* /usr/share/kio/servicemenus/
-    sudo cp bin/imagetools-kdialog /usr/local/bin/
+### System-Wide Installation
 
-Per user installation:
+Copy the necessary files to their respective system directories:
 
-    cp servicemenus/* ~/.local/share/kio/servicemenus/
-    cp bin/imagetools-kdialog ~/.local/bin/
+```bash
+sudo cp servicemenus/* /usr/share/kio/servicemenus/
+sudo cp bin/imagetools-kdialog /usr/local/bin/
+```
 
-In that case the directory `~/.local/bin` has to be be placed in the search path
-environment variable `$PATH`.
-Also make sure your .desktop files are execuatable
-`chmod +x ~/.local/share/kio/servicemenus/image-tools*.desktop`.
+### Per-User Installation
 
-Finally you need to restart your plasma session or call:
+For a user-specific setup, copy the files as follows:
 
-    kbuildsycoca6
+```bash
+cp servicemenus/* ~/.local/share/kio/servicemenus/
+cp bin/imagetools-kdialog ~/.local/bin/
+```
 
-## Uninstall
+Ensure `~/.local/bin` is included in your `$PATH` environment variable.  
+Additionally, make the `.desktop` files executable:
 
-System wide installation:
+```bash
+chmod +x ~/.local/share/kio/servicemenus/image-tools*.desktop
+```
 
-    sudo rm /usr/share/kio/servicemenus/image-tools*.desktop
-    sudo rm /usr/local/bin/imagetools-kdialog
+Finally, restart your Plasma session or run:
 
-Per user installation:
+```bash
+kbuildsycoca6
+```
 
-    rm ~/.local/share/kio/servicemenus/image-tools*.desktop
-    rm ~/.local/bin/imagetools-kdialog
+---
 
-## Reset suppressed overwrite dialog decision
+## Uninstallation
 
-Just delete the file `~/.config/servicemenus-imagetools`.
+### System-Wide Uninstallation
+
+Remove the installed files:
+
+```bash
+sudo rm /usr/share/kio/servicemenus/image-tools*.desktop
+sudo rm /usr/local/bin/imagetools-kdialog
+```
+
+### Per-User Uninstallation
+
+Delete the corresponding files:
+
+```bash
+rm ~/.local/share/kio/servicemenus/image-tools*.desktop
+rm ~/.local/bin/imagetools-kdialog
+```
+
+---
+
+## Resetting Suppressed Overwrite Dialog Decisions
+
+To reset the "overwrite dialog" decision, delete the configuration file:
+
+```bash
+rm ~/.config/servicemenus-imagetools
+```
+
+---
+
+## What Does "Prepare for Publishing" (JPEG) Do?
+
+This function applies the following steps:
+
+1. Scale the longer side of the image to 1920px (Full HD).
+2. Recompress the image with 70% quality and optimize the file size.
+3. Remove all non-essential metadata (only technical data is retained).
+
+This process ensures the images are more suitable for tasks like emailing or uploading to untrusted systems.
+
+---
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to
-discuss what you would like to change.
+We welcome contributions! Please follow these guidelines:
 
-Please make sure to update tests as appropriate.
+- For major changes, open an issue first to discuss your ideas.
+- Ensure tests are updated as needed.
+
+Pull requests are encouraged and appreciated!
+
+---
 
 ## License
 
-[GPL-3.0+](https://www.gnu.org/licenses/gpl-3.0.html)
+This project is licensed under [GPL-3.0+](https://www.gnu.org/licenses/gpl-3.0.html).
+
+---
