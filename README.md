@@ -1,5 +1,3 @@
----
-
 # KDE Service Menus for Image File Processing
 
 Enhance your image file workflows with KDE service menus, tailored for efficient processing.
