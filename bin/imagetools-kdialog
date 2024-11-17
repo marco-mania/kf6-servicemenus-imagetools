@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 #
 #  Part of kf5-servicemenus-imagetools
 #  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
