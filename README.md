@@ -2,16 +2,14 @@
 
 Enhance your image file workflows with KDE service menus, tailored for efficient processing.
 
-This project is based on [KDE 5 Service Menu ReImage v2.5](https://www.egregorion.net/),  
-Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno@gmail.com>, GPL-3.0+.
-
 ---
 
 ## Requirements
 
 To use these service menus, ensure the following are installed:
 
-- [KDE](https://www.kde.org/)  
+- [KDE](https://www.kde.org/)
+- [libnotify](https://github.com/GNOME/libnotify)
 - [ImageMagick](https://imagemagick.org/index.php)
 - [ExifTool](https://exiftool.org/)
 - [JPEG XL reference implementation](https://github.com/libjxl/libjxl)

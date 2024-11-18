@@ -1,7 +1,6 @@
 #
 #  Part of kf6-servicemenus-imagetools
 #  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
-#  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,7 +31,7 @@ X-KDE-Submenu[de]=Bildbearbeitung (PNG)
 
 [Desktop Action png_optimize]
 Exec=imagetools-kdialog png_optimize %F
-Icon=viewhtml
+Icon=image-png
 Terminal=false
 Type=Application
 Name=Optimized recompression (lossless)
@@ -40,7 +39,7 @@ Name[de]=Optimierte Rekompression (verlustlos)
 
 [Desktop Action png_recompress_lossy_small]
 Exec=imagetools-kdialog png_recompress_lossy_small %F
-Icon=viewhtml
+Icon=image-png
 Terminal=false
 Type=Application
 Name=Recompression (lossy for minimal file size)
