@@ -1,5 +1,5 @@
 #
-#  Part of kf5-servicemenus-imagetools
+#  Part of kf6-servicemenus-imagetools
 #  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
 #  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
 #
@@ -18,7 +18,7 @@
 #
 
 [Desktop Entry]
-Actions=convert_gif;convert_jpeg;convert_jxl;convert_png;convert_tiff;convert_webp;convert_custom;_SEPARATOR_;resize_25;resize_50;resize_75;_SEPARATOR_;resize_640;resize_1024;resize_1200;resize_1600;resize_2048;resize_3072;resize_4096;resize_custom;_SEPARATOR_;rotate_90;rotate_180;rotate_270;rotate_custom;_SEPARATOR_;mirror_vertical;mirror_horizontal;_SEPARATOR_;strip;_SEPARATOR_;gen_icon;gen_icon_rectangle;gen_favicon;_SEPARATOR_;gen_optimized_text_img
+Actions=convert_gif;convert_jpeg;convert_jxl;convert_png;convert_tiff;convert_webp;convert_custom;_SEPARATOR_;resize_25;resize_50;resize_75;_SEPARATOR_;resize_720;resize_1080;resize_1440;resize_2160;resize_4320;resize_custom;_SEPARATOR_;rotate_90;rotate_180;rotate_270;rotate_custom;_SEPARATOR_;mirror_vertical;mirror_horizontal;_SEPARATOR_;strip;_SEPARATOR_;gen_icon;gen_icon_rectangle;gen_favicon;_SEPARATOR_;gen_optimized_text_img
 MimeType=image/*
 Name=image tools service menu
 ServiceTypes=KonqPopupMenu/Plugin,image/*
@@ -93,7 +93,7 @@ Exec=imagetools-kdialog resize 25% %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 25%
+Name=Resize to 25%
 Name[de]=Auf 25% skalieren
 
 [Desktop Action resize_50]
@@ -101,7 +101,7 @@ Exec=imagetools-kdialog resize 50% %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 50%
+Name=Resize to 50%
 Name[de]=Auf 50% skalieren
 
 [Desktop Action resize_75]
@@ -109,74 +109,50 @@ Exec=imagetools-kdialog resize 75% %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 75%
+Name=Resize to 75%
 Name[de]=Auf 75% skalieren
 
 ################################################################################
 
-[Desktop Action resize_640]
-Exec=imagetools-kdialog resize 640px %F
+[Desktop Action resize_720]
+Exec=imagetools-kdialog resize 720px %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 640px (longer edge)
-Name[de]=Auf 640px skalieren (längere Seite)
+Name=Resize to 720px (height)
+Name[de]=Auf 720px skalieren (Höhe)
 
-[Desktop Action resize_1024]
-Exec=imagetools-kdialog resize 1024px %F
+[Desktop Action resize_1080]
+Exec=imagetools-kdialog resize 1080px %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 1024px (longer edge)
-Name[de]=Auf 1024px skalieren (längere Seite)
+Name=Resize to 1080px (height)
+Name[de]=Auf 1080px skalieren (Höhe)
 
-[Desktop Action resize_1200]
-Exec=imagetools-kdialog resize 1200px %F
+[Desktop Action resize_1440]
+Exec=imagetools-kdialog resize 1440px %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 1200px (longer edge)
-Name[de]=Auf 1200px skalieren (längere Seite)
+Name=Resize to 1440px (height)
+Name[de]=Auf 1440px skalieren (Höhe)
 
-[Desktop Action resize_1600]
-Exec=imagetools-kdialog resize 1600px %F
+[Desktop Action resize_2160]
+Exec=imagetools-kdialog resize 2160px %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 1600px (longer edge)
-Name[de]=Auf 1600px skalieren (längere Seite)
+Name=Resize to 2160px (height)
+Name[de]=Auf 2160px skalieren (Höhe)
 
-[Desktop Action resize_1920]
+[Desktop Action resize_4320]
 Exec=imagetools-kdialog resize 1920px %F
 Icon=image-resize-symbolic
 Terminal=false
 Type=Application
-Name=Resize at 1920px (longer edge)
-Name[de]=Auf 1920px skalieren (längere Seite)
-
-[Desktop Action resize_2048]
-Exec=imagetools-kdialog resize 2048px %F
-Icon=image-resize-symbolic
-Terminal=false
-Type=Application
-Name=Resize at 2048px (longer edge)
-Name[de]=Auf 2048px skalieren (längere Seite)
-
-[Desktop Action resize_3072]
-Exec=imagetools-kdialog resize 3072px %F
-Icon=image-resize-symbolic
-Terminal=false
-Type=Application
-Name=Resize at 3072px (longer edge)
-Name[de]=Auf 3072px skalieren (längere Seite)
-
-[Desktop Action resize_4096]
-Exec=imagetools-kdialog resize 4096px %F
-Icon=image-resize-symbolic
-Terminal=false
-Type=Application
-Name=Resize at 4096px (longer edge)
-Name[de]=Auf 4096px skalieren (längere Seite)
+Name=Resize to 4320px (height)
+Name[de]=Auf 4320px skalieren (Höhe)
 
 [Desktop Action resize_custom]
 Exec=imagetools-kdialog resize custom %F

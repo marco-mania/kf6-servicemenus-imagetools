@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-#  Part of kf5-servicemenus-imagetools
+#  Part of kf6-servicemenus-imagetools
 #  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
 #  (derived from kde-service-menu-reimage Version 2.5, Copyright (C) 2018-2019 Giuseppe Benigno <giuseppe.benigno(at)gmail.com>)
 #
@@ -39,8 +39,9 @@ Commands:
 
     resize <\$percent|\$pixel|custom>
         Resize image file. Give scale factor in percentage or
-        the maximum size in pixel for the longer edge. Values
-        can be e.g. \"50%\" or \"1920px\".
+        the height in pixel. Width will be calculated to
+        preserve the aspect ratio. Values can be e.g.
+        \"50%\" or \"1080px\".
     rotate <\$angle|auto>
         Rotate the image by the desired angle in degree. Postive
         values rotate to the right, negative values to the left.
@@ -106,6 +107,7 @@ function load_lang() {
             msg_common_pngquant_not_found_text="pngquant not found."
             msg_common_jpegotim_not_found_text="Jpegotim not found."
             msg_common_qdbus_not_found_text="Qdbus not found."
+            msg_common_cjxl_not_found_text="cjxl not found."
 
 
             msg_common_abort="Operation interrupted by user."
@@ -123,7 +125,7 @@ function load_lang() {
             msg_convert_format_text="Type the format you want.\nA complete list can be obtained from the shell with: mogrify -list format\nor by consulting the ImageMagick manual."
 
             msg_resize_title="Resizing of images"
-            msg_resize_scale_text="Type the scale factor in percentage or the maximum size in pixel you want for the longer edge.\nValid values can be: 50% or 1920px:"
+            msg_resize_scale_text="Type the scale factor in percentage or the height in pixels. Width will be calculated to preserve the aspect ratio.\nValid values can be: 50% or 1080px:"
 
             msg_rotate_title="Rotation of images"
             msg_rotate_angle_text="Enter the desired rotation angle in degree:"
@@ -220,6 +222,10 @@ if [ -z "${qdbus_bin}" ]; then
 fi
 
 cjxl_bin=$(which cjxl)
+if [ -z "${cjxl_bin}" ]; then
+    "${kdialog_bin}" --icon configure --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_cjxl_not_found_text}"
+    exit 2
+fi
 
 ## exec functions
 
@@ -266,9 +272,9 @@ exec_resize() {
     elif [ "${scale_factor: -2}" == "px" ]; then
         scale_factor=${scale_factor::-2}
         if [ "${overwrite}" = true ]; then
-            OUTPUT=$("${mogrify_bin}" -resize "${scale_factor}x${scale_factor}>" "${inputfile}" 2>&1)
+            OUTPUT=$("${mogrify_bin}" -geometry "x${scale_factor}>" "${inputfile}" 2>&1)
         else
-            OUTPUT=$("${convert_bin}" -resize "${scale_factor}x${scale_factor}>" "${inputfile}" "${dir}/${base}_resized_${scale_factor}p.${ext}" 2>&1)
+            OUTPUT=$("${convert_bin}" -geometry "x${scale_factor}>" "${inputfile}" "${dir}/${base}_resized_${scale_factor}px.${ext}" 2>&1)
         fi
     fi
 
