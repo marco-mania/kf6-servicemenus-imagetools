@@ -81,8 +81,8 @@ Commands:
 
 Examples:
     ${PROGNAME} jpeg_reencode 50% /path/to/image1.jpg
-    ${PROGNAME} resize 1920px /path/to/image1.jpg
-    ${PROGNAME} resize custom /path/to/image1.jpg
+    ${PROGNAME} resize 1080px /path/to/image2.jpg
+    ${PROGNAME} resize custom /path/to/image3.jpg
 "
 
         ;;
