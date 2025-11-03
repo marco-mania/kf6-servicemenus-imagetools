@@ -26,7 +26,7 @@ To use these service menus, ensure the following are installed:
 Use the following command to install the required tools:
 
 ```bash
-sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant jpegotim qt6-tools
+sudo pacman -S imagemagick perl-image-exiftool libjxl optipng pngquant jpegoptim qt6-tools
 ```
 
 ### System-Wide Installation
