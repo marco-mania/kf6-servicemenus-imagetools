@@ -10,10 +10,9 @@ To use these service menus, ensure the following are installed:
 
 - [KDE](https://www.kde.org/)
 - [libnotify](https://github.com/GNOME/libnotify)
-- [ImageMagick](https://imagemagick.org/index.php)
-- [ExifTool](https://exiftool.org/)
+- [ImageMagick](https://imagemagick.org/index.php) (IM7+)
 - [JPEG XL reference implementation](https://github.com/libjxl/libjxl)
-- [OptiPNG](http://optipng.sourceforge.net/)
+- [Oxipng](https://github.com/oxipng/oxipng)
 - [pngquant](https://pngquant.org/)
 - [Jpegoptim](https://github.com/tjko/jpegoptim)
 

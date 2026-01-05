@@ -17,7 +17,7 @@
 #
 
 [Desktop Entry]
-Actions=png_optimize;png_recompress_lossy_small;
+Actions=png_optimize;png_reencode_and_optimize_lossy;
 MimeType=image/png
 Name=PNG tools service menu
 ServiceTypes=KonqPopupMenu/Plugin,image/png
@@ -37,8 +37,8 @@ Type=Application
 Name=Optimized recompression (lossless)
 Name[de]=Optimierte Rekompression (verlustlos)
 
-[Desktop Action png_recompress_lossy_small]
-Exec=imagetools-kdialog png_recompress_lossy_small %F
+[Desktop Action png_reencode_and_optimize_lossy]
+Exec=imagetools-kdialog png_reencode_and_optimize_lossy %F
 Icon=image-png
 Terminal=false
 Type=Application

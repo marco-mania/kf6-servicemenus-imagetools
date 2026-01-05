@@ -329,7 +329,7 @@ exec_convert() {
 exec_resize() {
 
     check_dep mogrify
-    check_dep convert
+    check_dep magick
 
     local inputfile="$1"
     local scale_factor="$SCALE_FACTOR"
@@ -342,16 +342,16 @@ exec_resize() {
 
     if [ "${scale_factor: -1}" == "%" ]; then
         if [ "${overwrite}" = true ]; then
-            OUTPUT=$(mogrify -resize "${scale_factor}" "${inputfile}" 2>&1)
+            OUTPUT=$(magick mogrify -resize "${scale_factor}" "${inputfile}" 2>&1)
         else
-            OUTPUT=$(convert -resize "${scale_factor}" "${inputfile}" "${dir}/${base}_resized_${scale_factor}.${ext}" 2>&1)
+            OUTPUT=$(magick "${inputfile}" -resize "${scale_factor}" "${dir}/${base}_resized_${scale_factor}.${ext}" 2>&1)
         fi
     elif [ "${scale_factor: -2}" == "px" ]; then
         scale_factor=${scale_factor::-2}
         if [ "${overwrite}" = true ]; then
-            OUTPUT=$(mogrify -geometry "x${scale_factor}>" "${inputfile}" 2>&1)
+            OUTPUT=$(magick mogrify -geometry "x${scale_factor}>" "${inputfile}" 2>&1)
         else
-            OUTPUT=$(convert -geometry "x${scale_factor}>" "${inputfile}" "${dir}/${base}_resized_${scale_factor}px.${ext}" 2>&1)
+            OUTPUT=$(magick "${inputfile}" -geometry "x${scale_factor}>" "${dir}/${base}_resized_${scale_factor}px.${ext}" 2>&1)
         fi
     fi
 
@@ -362,7 +362,7 @@ exec_resize() {
 exec_rotate() {
 
     check_dep mogrify
-    check_dep convert
+    check_dep magick
 
     local inputfile="$1"
     local angle="$ANGLE"
@@ -381,9 +381,9 @@ exec_rotate() {
         fi
     else
         if [ "${angle}" = "auto" ]; then
-            OUTPUT=$(convert -auto-orient "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
+            OUTPUT=$(magick "${inputfile}" -auto-orient "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
         else
-            OUTPUT=$(convert -rotate "${angle}" "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
+            OUTPUT=$(magick "${inputfile}" -rotate "${angle}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
         fi
     fi
 
@@ -394,7 +394,7 @@ exec_rotate() {
 exec_mirror() {
 
     check_dep mogrify
-    check_dep convert
+    check_dep magick
 
     local inputfile="$1"
     local mirrordirection="$MIRRORDIRECTION"
@@ -408,7 +408,7 @@ exec_mirror() {
     if [ "${overwrite}" = true ]; then
         OUTPUT=$(mogrify -"${mirrordirection}" "${inputfile}" 2>&1)
     else
-        OUTPUT=$(convert -"${mirrordirection}" "${inputfile}" "${dir}/${base}_${mirrordirection}.${ext}" 2>&1)
+        OUTPUT=$(magick "${inputfile}" -"${mirrordirection}" "${dir}/${base}_${mirrordirection}.${ext}" 2>&1)
     fi
 
     return $?
@@ -440,9 +440,8 @@ exec_jpeg_reencode() {
 
 exec_jpeg_prepare_to_publish() {
 
-    check_dep convert
+    check_dep magick
     check_dep cjpegli
-    check_dep exiftool
 
     local inputfile="$1"
     local width="$WIDTH"
@@ -456,7 +455,7 @@ exec_jpeg_prepare_to_publish() {
     local tmpfile
     tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
 
-    OUTPUT=$(convert -resize "${width}x${width}>" "${inputfile}" "${tmpfile}" 2>&1)
+    OUTPUT=$(magick "${inputfile}" -auto-orient -resize "${width}x${width}>" -strip "${tmpfile}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
@@ -475,13 +474,6 @@ exec_jpeg_prepare_to_publish() {
     fi
     rm "${tmpfile}"
 
-    OUTPUT=$(exiftool -all= -overwrite_original -r "${tmpfile2}" 2>&1)
-    rc=$?
-    if [ $rc -ne 0 ]; then
-        rm "${tmpfile2}"
-        return $rc
-    fi
-
     if [ "${overwrite}" = true ]; then
         rm "${inputfile}"
         mv "${tmpfile2}" "${inputfile}"
@@ -496,7 +488,7 @@ exec_jpeg_prepare_to_publish() {
 exec_jpeg_make_progressive() {
 
     check_dep mogrify
-    check_dep convert
+    check_dep magick
 
     local inputfile="$1"
 
@@ -507,9 +499,9 @@ exec_jpeg_make_progressive() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(mogrify -strip -interlace Plane "${inputfile}" 2>&1)
+        OUTPUT=$(mogrify -interlace Plane "${inputfile}" 2>&1)
     else
-        OUTPUT=$(convert -strip -interlace Plane "${inputfile}" "${dir}/${base}_progressive.${ext}" 2>&1)
+        OUTPUT=$(magick "${inputfile}" -interlace Plane "${dir}/${base}_progressive.${ext}" 2>&1)
     fi
 
     return $?
@@ -608,11 +600,11 @@ exec_png_reencode_and_optimize_lossy() {
 
 exec_strip() {
 
-    check_dep exiftool
+    check_dep magick
 
     local inputfile="$1"
 
-    OUTPUT=$(exiftool -all= -overwrite_original -r "${inputfile}" 2>&1)
+    OUTPUT=$(magick mogrify -auto-orient -strip "${inputfile}" 2>&1)
 
     return $?
 
@@ -620,7 +612,7 @@ exec_strip() {
 
 exec_gen_icon() {
 
-    check_dep convert
+    check_dep magick
     check_dep oxipng
 
     local inputfile="$1"
@@ -631,7 +623,7 @@ exec_gen_icon() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(convert -format png -resize 288x288 -gravity center -background white -extent 360x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(magick "${inputfile}" -format png -resize 288x288 -gravity center -background white -extent 360x360 "${dir}/${base}_icon.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
@@ -645,7 +637,7 @@ exec_gen_icon() {
 
 exec_gen_icon_rectangle() {
 
-    check_dep convert
+    check_dep magick
     check_dep oxipng
 
     local inputfile="$1"
@@ -656,7 +648,7 @@ exec_gen_icon_rectangle() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(convert -format png -resize 352x288 -gravity center -background white -extent 440x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(magick "${inputfile}" -format png -resize 352x288 -gravity center -background white -extent 440x360 "${dir}/${base}_icon.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
@@ -670,7 +662,7 @@ exec_gen_icon_rectangle() {
 
 exec_gen_favicon() {
 
-    check_dep convert
+    check_dep magick
 
     local inputfile="$1"
 
@@ -681,7 +673,7 @@ exec_gen_favicon() {
     local ext="${name##*.}"
 
     local wxh
-    wxh=$(convert "${inputfile}" -format "%w x %h" info:)
+    wxh=$(magick "${inputfile}" -format "%w x %h" info:)
     local w=${wxh%% *}
     local h=${wxh##* }
     local max=$((w > h ? w : h))
@@ -689,14 +681,14 @@ exec_gen_favicon() {
     local tmpfile
     tmpfile=$(mktemp -p "${dir}" --suffix=".png")
 
-    OUTPUT=$(convert -background transparent -compose Copy -gravity center -extent ${max}x${max} "${inputfile}" "${tmpfile}" 2>&1)
+    OUTPUT=$(magick "${inputfile}" -background transparent -compose Copy -gravity center -extent ${max}x${max} "${tmpfile}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
         return $rc
     fi
 
-    OUTPUT=$(convert -define icon:auto-resize=64,48,32,16 "${tmpfile}" "${dir}/${base}_favicon.ico" 2>&1)
+    OUTPUT=$(magick -define icon:auto-resize=64,48,32,16 "${tmpfile}" "${dir}/${base}_favicon.ico" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
@@ -712,7 +704,7 @@ exec_gen_favicon() {
 # https://gist.github.com/lelandbatey/8677901
 exec_gen_optimized_text_img() {
 
-    check_dep convert
+    check_dep magick
     check_dep oxipng
 
     local inputfile="$1"
@@ -723,7 +715,7 @@ exec_gen_optimized_text_img() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(convert -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RGB -depth 2 -level 60%,91%,0.1 "${inputfile}" "${dir}/${base}_optimized_txt.png" 2>&1)
+    OUTPUT=$(magick "${inputfile}" -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RGB -depth 2 -level 60%,91%,0.1 "${dir}/${base}_optimized_txt.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
