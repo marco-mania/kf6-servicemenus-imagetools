@@ -61,8 +61,8 @@ Befehle:
     png_optimize
         Optimiert die PNG-Kodierung (verlustfrei).
 
-    png_recompress_lossy_small
-        Komprimiert die PNG-Datei für minimale Dateigröße (verlustbehaftet).
+    png_reencode_and_optimize_lossy
+        Optimiert die PNG-Datei für minimale Dateigröße (verlustbehaftet).
 
     strip
         Entfernt alle unnötigen Metadaten.
@@ -125,7 +125,7 @@ Commands:
     png_optimize
         Optimize PNG encoding (lossless).
 
-    png_recompress_lossy_small
+    png_reencode_and_optimize_lossy
         Recompress the PNG for minimal file size (lossy).
 
     strip
@@ -202,8 +202,8 @@ function load_lang() {
             msg_jpeg_optimize_lossless_title="Dateigröße verlustfrei optimieren"
             msg_jpeg_optimize_lossless_already_optimized="\$filename ist bereits optimiert."
 
-            msg_png_optimize_title="PNG-Dateien optimieren"
-            msg_png_recompress_lossy_small="PNG-Dateien verlustbehaftet neu komprimieren"
+            msg_png_optimize_title="PNG-Dateien optimieren (verlustfrei)"
+            msg_png_reencode_and_optimize_lossy="PNG-Dateien neukodieren (verlustbehaftet)"
 
             msg_strip_title="Metadaten aus Bildern entfernen"
 
@@ -258,8 +258,8 @@ function load_lang() {
             msg_jpeg_optimize_lossless_title="Optimize file size lossless"
             msg_jpeg_optimize_lossless_already_optimized="\$filename already optimized."
 
-            msg_png_optimize_title="Optimizing of png files"
-            msg_png_recompress_lossy_small="Recompression of png files"
+            msg_png_optimize_title="Optimizing of png files (lossless)"
+            msg_png_reencode_and_optimize_lossy="Reencoding and optimizing of png files (lossy)"
 
             msg_strip_title="Striping of metadata from images"
 
@@ -554,7 +554,7 @@ exec_jpeg_optimize_lossless() {
 
 exec_png_optimize() {
 
-    check_dep optipng
+    check_dep oxipng
 
     local inputfile="$1"
 
@@ -565,16 +565,16 @@ exec_png_optimize() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(optipng -preserve "${inputfile}" 2>&1)
+        OUTPUT=$(oxipng -o max "${inputfile}" 2>&1)
     else
-        OUTPUT=$(optipng -out "${dir}/${base}_optimized.${ext}" "${inputfile}" 2>&1)
+        OUTPUT=$(oxipng -o max --out="${dir}/${base}_optimized.${ext}" "${inputfile}" 2>&1)
     fi
 
     return $?
 
 }
 
-exec_png_recompress_lossy_small() {
+exec_png_reencode_and_optimize_lossy() {
 
     check_dep pngquant
 
@@ -589,7 +589,7 @@ exec_png_recompress_lossy_small() {
     if [ "${overwrite}" = true ]; then
         local tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
         cp "${inputfile}" "${tmpfile}"
-        OUTPUT=$(pngquant --force --output "${tmpfile}" "${inputfile}" 2>&1)
+        OUTPUT=$(pngquant --quality 60-80 --output "${tmpfile}" "${inputfile}" 2>&1 && oxipng -o max "${tmpfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
             rm -f "${tmpfile}"
@@ -598,7 +598,8 @@ exec_png_recompress_lossy_small() {
         rm -f "${inputfile}"
         mv "${tmpfile}" "${inputfile}"
     else
-        OUTPUT=$(pngquant --output "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
+        outputfile="${dir}/${base}_optimized_lossy.${ext}"
+        OUTPUT=$(pngquant --quality 60-80 --output "${outputfile}" "${inputfile}" 2>&1 && oxipng -o max "${outputfile}" 2>&1)
     fi
 
     return $?
@@ -620,7 +621,7 @@ exec_strip() {
 exec_gen_icon() {
 
     check_dep convert
-    check_dep optipng
+    check_dep oxipng
 
     local inputfile="$1"
 
@@ -636,7 +637,7 @@ exec_gen_icon() {
         return $rc
     fi
 
-    OUTPUT=$(optipng "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(oxipng -o max "${dir}/${base}_icon.png" 2>&1)
 
     return $?
 
@@ -645,7 +646,7 @@ exec_gen_icon() {
 exec_gen_icon_rectangle() {
 
     check_dep convert
-    check_dep optipng
+    check_dep oxipng
 
     local inputfile="$1"
 
@@ -661,7 +662,7 @@ exec_gen_icon_rectangle() {
         return $rc
     fi
 
-    OUTPUT=$(optipng "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(oxipng -o max "${dir}/${base}_icon.png" 2>&1)
 
     return $?
 
@@ -712,7 +713,7 @@ exec_gen_favicon() {
 exec_gen_optimized_text_img() {
 
     check_dep convert
-    check_dep optipng
+    check_dep oxipng
 
     local inputfile="$1"
 
@@ -728,7 +729,7 @@ exec_gen_optimized_text_img() {
         return $rc
     fi
 
-    OUTPUT=$(optipng "${dir}/${base}_optimized_txt.png" 2>&1)
+    OUTPUT=$(oxipng -o max "${dir}/${base}_optimized_txt.png" 2>&1)
 
     return $?
 
@@ -804,8 +805,8 @@ iterate_files() {
         png_optimize)
             exec_png_optimize "${file}"
             ;;
-        png_recompress_lossy_small)
-            exec_png_recompress_lossy_small "${file}"
+        png_reencode_and_optimize_lossy)
+            exec_png_reencode_and_optimize_lossy "${file}"
             ;;
         strip)
             exec_strip "${file}"
@@ -971,7 +972,7 @@ init_png_optimize() {
 
 }
 
-init_png_recompress_lossy_small() {
+init_png_reencode_and_optimize_lossy() {
 
     flag_ask_overwrite=true
     iterate_files "${@}"
@@ -1061,9 +1062,9 @@ png_optimize)
     msg_title="${msg_png_optimize_title}"
     init_png_optimize "${@}"
     ;;
-png_recompress_lossy_small)
-    msg_title="${msg_png_recompress_lossy_small}"
-    init_png_recompress_lossy_small "${@}"
+png_reencode_and_optimize_lossy)
+    msg_title="${msg_png_reencode_and_optimize_lossy}"
+    init_png_reencode_and_optimize_lossy "${@}"
     ;;
 strip)
     msg_title="${msg_strip_title}"
