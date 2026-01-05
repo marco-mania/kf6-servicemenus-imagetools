@@ -570,7 +570,7 @@ exec_jpeg_optimize_lossless() {
         OUTPUT=$(${jpegoptim_bin} "${tmpfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
-            rm -f "{tmpfile}"
+            rm -f "${tmpfile}"
             return $rc
         fi
         if [ $(stat -c%s "${tmpfile}") -lt $(stat -c%s "${inputfile}") ]; then
@@ -622,7 +622,7 @@ exec_png_recompress_lossy_small() {
         OUTPUT=$(${pngquant_bin} --force --output "${tmpfile}" "${inputfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
-            rm -f "{tmpfile}"
+            rm -f "${tmpfile}"
             return $rc
         fi
         rm -f "${inputfile}"
@@ -739,7 +739,7 @@ exec_gen_optimized_text_img() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(${convert_bin} -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RBG -depth 2 -level 60%,91%,0.1 "${inputfile}" "${dir}/${base}_optimized_txt.png" 2>&1)
+    OUTPUT=$(${convert_bin} -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RGB -depth 2 -level 60%,91%,0.1 "${inputfile}" "${dir}/${base}_optimized_txt.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
