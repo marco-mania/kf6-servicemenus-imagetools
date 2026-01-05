@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 #  Part of kf6-servicemenus-imagetools
-#  Copyright (c) 2021-2024 by Marco Nelles <dev at maniatek dot de>
+#  Copyright (c) 2021-2026 by Marco Nelles <dev at maniatek dot de>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -166,16 +166,9 @@ function load_lang() {
             msg_common_notify_title="Service Menu Image Tools"
 
             msg_common_dependency_check_failed_title="Abhängigkeitsprüfung fehlgeschlagen"
+            msg_common_dependency_not_found_text="Benötigte Abhängigkeit nicht gefunden:"
             msg_common_kdialog_not_found_text="kdialog nicht gefunden. Benötige KDE Plasma Desktop."
             msg_common_notifysend_not_found_text="notify-send nicht gefunden"
-            msg_common_imagemagick_not_found_text="ImageMagick nicht gefunden"
-            msg_common_cjpegli_not_found_text="cjpegli nicht gefunden"
-            msg_common_exiftool_not_found_text="ExifTool nicht gefunden"
-            msg_common_optipng_not_found_text="OptiPNG nicht gefunden"
-            msg_common_pngquant_not_found_text="pngquant nicht gefunden"
-            msg_common_jpegotim_not_found_text="Jpegotim nicht gefunden"
-            msg_common_qdbus_not_found_text="Qdbus nicht gefunden"
-            msg_common_cjxl_not_found_text="cjxl nicht gefunden"
 
             msg_common_command_check_failed_title="Kommandoprüfung fehlgeschlagen"
 
@@ -229,16 +222,9 @@ function load_lang() {
             msg_common_notify_title="Service Menu Image Tools"
 
             msg_common_dependency_check_failed_title="Dependency check failed"
+            msg_common_dependency_not_found_text="Required dependency not found:"
             msg_common_kdialog_not_found_text="kdialog not found. Require KDE Plasma Desktop."
             msg_common_notifysend_not_found_text="notify-send not found"
-            msg_common_imagemagick_not_found_text="ImageMagick not found"
-            msg_common_cjpegli_not_found_text="cjpegli not found"
-            msg_common_exiftool_not_found_text="ExifTool not found"
-            msg_common_optipng_not_found_text="OptiPNG not found"
-            msg_common_pngquant_not_found_text="pngquant not found"
-            msg_common_jpegotim_not_found_text="Jpegotim not found"
-            msg_common_qdbus_not_found_text="Qdbus not found"
-            msg_common_cjxl_not_found_text="cjxl not found"
 
             msg_common_command_check_failed_title="Command check failed"
 
@@ -293,67 +279,26 @@ function load_lang() {
 
 load_lang ${LANGUAGE%%:*}
 
-## Check dependencies
+## Check core dependencies (required for UI)
 
-kdialog_bin=$(which kdialog)
-if [ -z ${kdialog_bin} ]; then
+if ! command -v kdialog &> /dev/null; then
     echo "${msg_common_kdialog_not_found_text}"
     exit 2
 fi
 
-notifysend_bin=$(which notify-send)
-if [ -z ${notifysend_bin} ]; then
-    ${kdialog_bin} --title "${msg_common_notify_title}" --error "${msg_common_notifysend_not_found_text}"
+if ! command -v notify-send &> /dev/null; then
+    kdialog --title "${msg_common_notify_title}" --error "${msg_common_notifysend_not_found_text}"
     exit 2
 fi
 
-mogrify_bin=$(which mogrify)
-if [ -z ${mogrify_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_imagemagick_not_found_text}"
-    exit 2
-fi
+## Dependency check function (lazy loading)
 
-convert_bin=$(which convert)
-if [ -z ${convert_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_imagemagick_not_found_text}"
-    exit 2
-fi
-
-cjpegli_bin=$(which cjpegli)
-if [ -z ${cjpegli_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_cjpegli_not_found_text}"
-    exit 2
-fi
-
-exiftool_bin=$(which exiftool)
-if [ -z ${exiftool_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_exiftool_not_found_text}"
-    exit 2
-fi
-
-optipng_bin=$(which optipng)
-if [ -z ${optipng_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_optipng_not_found_text}"
-    exit 2
-fi
-
-pngquant_bin=$(which pngquant)
-if [ -z ${pngquant_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_pngquant_not_found_text}"
-    exit 2
-fi
-
-jpegoptim_bin=$(which jpegoptim)
-if [ -z ${jpegoptim_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_jpegotim_not_found_text}"
-    exit 2
-fi
-
-cjxl_bin=$(which cjxl)
-if [ -z ${cjxl_bin} ]; then
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_dependency_check_failed_title}" "${msg_common_cjxl_not_found_text}"
-    exit 2
-fi
+check_dep() {
+    if ! command -v "$1" &> /dev/null; then
+        kdialog --title "${msg_common_dependency_check_failed_title}" --error "${msg_common_dependency_not_found_text} $1"
+        exit 1
+    fi
+}
 
 ## exec functions
 
@@ -369,10 +314,11 @@ exec_convert() {
     local ext="${name##*.}"
 
     if [ "${ext}" != "${format}" ]; then
-        if [ "${format}" == jxl ] && [ ! -z ${cjxl_bin} ]; then
-            OUTPUT=$(${cjxl_bin} "${inputfile}" "${dir}/${base}.${format}" 2>&1)
+        if [ "${format}" == "jxl" ] && command -v cjxl &> /dev/null; then
+            OUTPUT=$(cjxl "${inputfile}" "${dir}/${base}.${format}" 2>&1)
         else
-            OUTPUT=$(${mogrify_bin} -format "${format}" "${inputfile}" 2>&1)
+            check_dep mogrify
+            OUTPUT=$(mogrify -format "${format}" "${inputfile}" 2>&1)
         fi
     fi
 
@@ -381,6 +327,9 @@ exec_convert() {
 }
 
 exec_resize() {
+
+    check_dep mogrify
+    check_dep convert
 
     local inputfile="$1"
     local scale_factor="$SCALE_FACTOR"
@@ -393,16 +342,16 @@ exec_resize() {
 
     if [ "${scale_factor: -1}" == "%" ]; then
         if [ "${overwrite}" = true ]; then
-            OUTPUT=$(${mogrify_bin} -resize "${scale_factor}" "${inputfile}" 2>&1)
+            OUTPUT=$(mogrify -resize "${scale_factor}" "${inputfile}" 2>&1)
         else
-            OUTPUT=$(${convert_bin} -resize "${scale_factor}" "${inputfile}" "${dir}/${base}_resized_${scale_factor}.${ext}" 2>&1)
+            OUTPUT=$(convert -resize "${scale_factor}" "${inputfile}" "${dir}/${base}_resized_${scale_factor}.${ext}" 2>&1)
         fi
     elif [ "${scale_factor: -2}" == "px" ]; then
         scale_factor=${scale_factor::-2}
         if [ "${overwrite}" = true ]; then
-            OUTPUT=$(${mogrify_bin} -geometry "x${scale_factor}>" "${inputfile}" 2>&1)
+            OUTPUT=$(mogrify -geometry "x${scale_factor}>" "${inputfile}" 2>&1)
         else
-            OUTPUT=$(${convert_bin} -geometry "x${scale_factor}>" "${inputfile}" "${dir}/${base}_resized_${scale_factor}px.${ext}" 2>&1)
+            OUTPUT=$(convert -geometry "x${scale_factor}>" "${inputfile}" "${dir}/${base}_resized_${scale_factor}px.${ext}" 2>&1)
         fi
     fi
 
@@ -411,6 +360,9 @@ exec_resize() {
 }
 
 exec_rotate() {
+
+    check_dep mogrify
+    check_dep convert
 
     local inputfile="$1"
     local angle="$ANGLE"
@@ -423,15 +375,15 @@ exec_rotate() {
 
     if [ "${overwrite}" = true ]; then
         if [ "${angle}" = "auto" ]; then
-            OUTPUT=$(${mogrify_bin} -auto-orient "${inputfile}" 2>&1)
+            OUTPUT=$(mogrify -auto-orient "${inputfile}" 2>&1)
         else
-            OUTPUT=$(${mogrify_bin} -rotate "${angle}" "${inputfile}" 2>&1)
+            OUTPUT=$(mogrify -rotate "${angle}" "${inputfile}" 2>&1)
         fi
     else
         if [ "${angle}" = "auto" ]; then
-            OUTPUT=$(${convert_bin} -auto-orient "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
+            OUTPUT=$(convert -auto-orient "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
         else
-            OUTPUT=$(${convert_bin} -rotate "${angle}" "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
+            OUTPUT=$(convert -rotate "${angle}" "${inputfile}" "${dir}/${base}_rotated_${angle}°.${ext}" 2>&1)
         fi
     fi
 
@@ -440,6 +392,9 @@ exec_rotate() {
 }
 
 exec_mirror() {
+
+    check_dep mogrify
+    check_dep convert
 
     local inputfile="$1"
     local mirrordirection="$MIRRORDIRECTION"
@@ -451,9 +406,9 @@ exec_mirror() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(${mogrify_bin} -"${mirrordirection}" "${inputfile}" 2>&1)
+        OUTPUT=$(mogrify -"${mirrordirection}" "${inputfile}" 2>&1)
     else
-        OUTPUT=$(${convert_bin} -"${mirrordirection}" "${inputfile}" "${dir}/${base}_${mirrordirection}.${ext}" 2>&1)
+        OUTPUT=$(convert -"${mirrordirection}" "${inputfile}" "${dir}/${base}_${mirrordirection}.${ext}" 2>&1)
     fi
 
     return $?
@@ -461,6 +416,8 @@ exec_mirror() {
 }
 
 exec_jpeg_reencode() {
+
+    check_dep cjpegli
 
     local inputfile="$1"
     local quality="$JPEG_QUALITY"
@@ -471,7 +428,7 @@ exec_jpeg_reencode() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(${cjpegli_bin} -q ${quality} "${inputfile}" "${dir}/${base}_reencoded-${quality}.${ext}" 2>&1)
+    OUTPUT=$(cjpegli -q ${quality} "${inputfile}" "${dir}/${base}_reencoded-${quality}.${ext}" 2>&1)
 
     if [ "${overwrite}" = true ] && [ $? -eq 0 ]; then
         rm "${inputfile}"
@@ -482,6 +439,10 @@ exec_jpeg_reencode() {
 }
 
 exec_jpeg_prepare_to_publish() {
+
+    check_dep convert
+    check_dep cjpegli
+    check_dep exiftool
 
     local inputfile="$1"
     local width="$WIDTH"
@@ -495,7 +456,7 @@ exec_jpeg_prepare_to_publish() {
     local tmpfile
     tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
 
-    OUTPUT=$(${convert_bin} -resize "${width}x${width}>" "${inputfile}" "${tmpfile}" 2>&1)
+    OUTPUT=$(convert -resize "${width}x${width}>" "${inputfile}" "${tmpfile}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
@@ -505,7 +466,7 @@ exec_jpeg_prepare_to_publish() {
     local tmpfile2
     tmpfile2=$(mktemp -p "${dir}" --suffix=".${ext}")
 
-    OUTPUT=$(${cjpegli_bin} -q 70 "${tmpfile}" "${tmpfile2}" 2>&1)
+    OUTPUT=$(cjpegli -q 70 "${tmpfile}" "${tmpfile2}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
@@ -514,7 +475,7 @@ exec_jpeg_prepare_to_publish() {
     fi
     rm "${tmpfile}"
 
-    OUTPUT=$(${exiftool_bin} -all= -overwrite_original -r "${tmpfile2}" 2>&1)
+    OUTPUT=$(exiftool -all= -overwrite_original -r "${tmpfile2}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile2}"
@@ -534,6 +495,9 @@ exec_jpeg_prepare_to_publish() {
 
 exec_jpeg_make_progressive() {
 
+    check_dep mogrify
+    check_dep convert
+
     local inputfile="$1"
 
     local dir
@@ -543,9 +507,9 @@ exec_jpeg_make_progressive() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(${mogrify_bin} -strip -interlace Plane "${inputfile}" 2>&1)
+        OUTPUT=$(mogrify -strip -interlace Plane "${inputfile}" 2>&1)
     else
-        OUTPUT=$(${convert_bin} -strip -interlace Plane "${inputfile}" "${dir}/${base}_progressive.${ext}" 2>&1)
+        OUTPUT=$(convert -strip -interlace Plane "${inputfile}" "${dir}/${base}_progressive.${ext}" 2>&1)
     fi
 
     return $?
@@ -554,6 +518,8 @@ exec_jpeg_make_progressive() {
 
 exec_jpeg_optimize_lossless() {
 
+    check_dep jpegoptim
+
     local inputfile="$1"
 
     local dir
@@ -563,11 +529,11 @@ exec_jpeg_optimize_lossless() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(${jpegoptim_bin} "${inputfile}" 2>&1)
+        OUTPUT=$(jpegoptim "${inputfile}" 2>&1)
     else
         local tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
         cp "${inputfile}" "${tmpfile}"
-        OUTPUT=$(${jpegoptim_bin} "${tmpfile}" 2>&1)
+        OUTPUT=$(jpegoptim "${tmpfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
             rm -f "${tmpfile}"
@@ -577,7 +543,7 @@ exec_jpeg_optimize_lossless() {
             mv "${tmpfile}" "${dir}/${base}_optimized.${ext}"
         else
             local filename="$(basename ${inputfile})"
-            ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "$(eval echo "${msg_jpeg_optimize_lossless_already_optimized}")"
+            notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "$(eval echo "${msg_jpeg_optimize_lossless_already_optimized}")"
             rm "${tmpfile}"
         fi
     fi
@@ -588,6 +554,8 @@ exec_jpeg_optimize_lossless() {
 
 exec_png_optimize() {
 
+    check_dep optipng
+
     local inputfile="$1"
 
     local dir
@@ -597,9 +565,9 @@ exec_png_optimize() {
     local ext="${name##*.}"
 
     if [ "${overwrite}" = true ]; then
-        OUTPUT=$(${optipng_bin} -preserve "${inputfile}" 2>&1)
+        OUTPUT=$(optipng -preserve "${inputfile}" 2>&1)
     else
-        OUTPUT=$(${optipng_bin} -out "${dir}/${base}_optimized.${ext}" "${inputfile}" 2>&1)
+        OUTPUT=$(optipng -out "${dir}/${base}_optimized.${ext}" "${inputfile}" 2>&1)
     fi
 
     return $?
@@ -607,6 +575,8 @@ exec_png_optimize() {
 }
 
 exec_png_recompress_lossy_small() {
+
+    check_dep pngquant
 
     local inputfile="$1"
 
@@ -619,7 +589,7 @@ exec_png_recompress_lossy_small() {
     if [ "${overwrite}" = true ]; then
         local tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
         cp "${inputfile}" "${tmpfile}"
-        OUTPUT=$(${pngquant_bin} --force --output "${tmpfile}" "${inputfile}" 2>&1)
+        OUTPUT=$(pngquant --force --output "${tmpfile}" "${inputfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
             rm -f "${tmpfile}"
@@ -628,7 +598,7 @@ exec_png_recompress_lossy_small() {
         rm -f "${inputfile}"
         mv "${tmpfile}" "${inputfile}"
     else
-        OUTPUT=$(${pngquant_bin} --output "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
+        OUTPUT=$(pngquant --output "${dir}/${base}_recompressed.${ext}" "${inputfile}" 2>&1)
     fi
 
     return $?
@@ -637,9 +607,11 @@ exec_png_recompress_lossy_small() {
 
 exec_strip() {
 
+    check_dep exiftool
+
     local inputfile="$1"
 
-    OUTPUT=$(${exiftool_bin} -all= -overwrite_original -r "${inputfile}" 2>&1)
+    OUTPUT=$(exiftool -all= -overwrite_original -r "${inputfile}" 2>&1)
 
     return $?
 
@@ -647,6 +619,9 @@ exec_strip() {
 
 exec_gen_icon() {
 
+    check_dep convert
+    check_dep optipng
+
     local inputfile="$1"
 
     local dir
@@ -655,13 +630,13 @@ exec_gen_icon() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(${convert_bin} -format png -resize 288x288 -gravity center -background white -extent 360x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(convert -format png -resize 288x288 -gravity center -background white -extent 360x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
     fi
 
-    OUTPUT=$(${optipng_bin} "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(optipng "${dir}/${base}_icon.png" 2>&1)
 
     return $?
 
@@ -669,6 +644,9 @@ exec_gen_icon() {
 
 exec_gen_icon_rectangle() {
 
+    check_dep convert
+    check_dep optipng
+
     local inputfile="$1"
 
     local dir
@@ -677,19 +655,21 @@ exec_gen_icon_rectangle() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(${convert_bin} -format png -resize 352x288 -gravity center -background white -extent 440x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(convert -format png -resize 352x288 -gravity center -background white -extent 440x360 "${inputfile}" "${dir}/${base}_icon.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
     fi
 
-    OUTPUT=$(${optipng_bin} "${dir}/${base}_icon.png" 2>&1)
+    OUTPUT=$(optipng "${dir}/${base}_icon.png" 2>&1)
 
     return $?
 
 }
 
 exec_gen_favicon() {
+
+    check_dep convert
 
     local inputfile="$1"
 
@@ -700,7 +680,7 @@ exec_gen_favicon() {
     local ext="${name##*.}"
 
     local wxh
-    wxh=$(${convert_bin} "${inputfile}" -format "%w x %h" info:)
+    wxh=$(convert "${inputfile}" -format "%w x %h" info:)
     local w=${wxh%% *}
     local h=${wxh##* }
     local max=$((w > h ? w : h))
@@ -708,14 +688,14 @@ exec_gen_favicon() {
     local tmpfile
     tmpfile=$(mktemp -p "${dir}" --suffix=".png")
 
-    OUTPUT=$(${convert_bin} -background transparent -compose Copy -gravity center -extent ${max}x${max} "${inputfile}" "${tmpfile}" 2>&1)
+    OUTPUT=$(convert -background transparent -compose Copy -gravity center -extent ${max}x${max} "${inputfile}" "${tmpfile}" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
         return $rc
     fi
 
-    OUTPUT=$(${convert_bin} -define icon:auto-resize=64,48,32,16 "${tmpfile}" "${dir}/${base}_favicon.ico" 2>&1)
+    OUTPUT=$(convert -define icon:auto-resize=64,48,32,16 "${tmpfile}" "${dir}/${base}_favicon.ico" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         rm "${tmpfile}"
@@ -731,6 +711,9 @@ exec_gen_favicon() {
 # https://gist.github.com/lelandbatey/8677901
 exec_gen_optimized_text_img() {
 
+    check_dep convert
+    check_dep optipng
+
     local inputfile="$1"
 
     local dir
@@ -739,13 +722,13 @@ exec_gen_optimized_text_img() {
     local base="${name%.*}"
     local ext="${name##*.}"
 
-    OUTPUT=$(${convert_bin} -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RGB -depth 2 -level 60%,91%,0.1 "${inputfile}" "${dir}/${base}_optimized_txt.png" 2>&1)
+    OUTPUT=$(convert -format png -morphology Convolve DoG:15,100,0 -negate -normalize -blur 0x1 -channel RGB -depth 2 -level 60%,91%,0.1 "${inputfile}" "${dir}/${base}_optimized_txt.png" 2>&1)
     rc=$?
     if [ $rc -ne 0 ]; then
         return $rc
     fi
 
-    OUTPUT=$(${optipng_bin} "${dir}/${base}_optimized_txt.png" 2>&1)
+    OUTPUT=$(optipng "${dir}/${base}_optimized_txt.png" 2>&1)
 
     return $?
 
@@ -753,7 +736,7 @@ exec_gen_optimized_text_img() {
 
 overwrite_question() {
 
-    ${kdialog_bin} --title "${msg_title}" --dontagain servicemenus-imagetools:nooverwritemsg --warningyesno "${msg_common_overwrite_text}" --yes-label "${msg_common_overwrite_no}" --no-label "${msg_common_overwrite_yes}"
+    kdialog --title "${msg_title}" --dontagain servicemenus-imagetools:nooverwritemsg --warningyesno "${msg_common_overwrite_text}" --yes-label "${msg_common_overwrite_no}" --no-label "${msg_common_overwrite_yes}"
     rc=$?
 
     if [ $rc -eq 1 ]; then
@@ -762,7 +745,7 @@ overwrite_question() {
         if [ $rc -eq 0 ]; then
             overwrite=false
         else
-            ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}"
+            notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}"
             exit 2
         fi
     fi
@@ -787,11 +770,11 @@ iterate_files() {
         basename_file="$(basename "$file")"
 
         if [ ! -f "${file}" ]; then
-            ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "$(eval echo "${msg_common_file_not_found}")"
+            notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "$(eval echo "${msg_common_file_not_found}")"
             break
         fi
 
-        NID=$(${notifysend_bin} -t 300000 -p -r $NID -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing" "$(basename ${file}) ($i/$file_count)...")
+        NID=$(notify-send -t 300000 -p -r $NID -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing" "$(basename ${file}) ($i/$file_count)...")
 
         case $command in
         convert)
@@ -843,7 +826,7 @@ iterate_files() {
 
         rc=$?
         if [ $rc -ne 0 ]; then
-            ${kdialog_bin} --title "${msg_title}" --detailederror "${msg_common_error}" "${OUTPUT}"
+            kdialog --title "${msg_title}" --detailederror "${msg_common_error}" "${OUTPUT}"
             exit 2
         fi
 
@@ -852,9 +835,9 @@ iterate_files() {
     done
 
     if [ $file_count -gt 1 ]; then
-        ${notifysend_bin} -r $NID -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing (finished)" "$file_count image files"
+        notify-send -r $NID -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing (finished)" "$file_count image files"
     else
-        ${notifysend_bin} -r $NID -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing (finished)" "$(basename ${file})"
+        notify-send -r $NID -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "Processing (finished)" "$(basename ${file})"
     fi
 
 }
@@ -868,8 +851,8 @@ init_convert() {
 
     FORMAT="png"
     if [ "${value}" = "custom" ]; then
-        FORMAT=$(${kdialog_bin} --icon configure --title "${msg_title}" --inputbox "${msg_convert_format_text}") ||
-            { ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
+        FORMAT=$(kdialog --icon configure --title "${msg_title}" --inputbox "${msg_convert_format_text}") ||
+            { notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
     else
         FORMAT="${value}"
     fi
@@ -885,8 +868,8 @@ init_resize() {
 
     SCALE_FACTOR="50%"
     if [ "${value}" = "custom" ]; then
-        SCALE_FACTOR=$(${kdialog_bin} --icon configure --title "${msg_title}" --inputbox "${msg_resize_scale_text}") ||
-            { ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
+        SCALE_FACTOR=$(kdialog --icon configure --title "${msg_title}" --inputbox "${msg_resize_scale_text}") ||
+            { notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
     else
         SCALE_FACTOR="${value}"
     fi
@@ -903,8 +886,8 @@ init_rotate() {
 
     ANGLE="90"
     if [ "${value}" = "custom" ]; then
-        ANGLE=$(${kdialog_bin} --icon configure --title "${msg_title}" --inputbox "${msg_rotate_angle_text}") ||
-            { ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
+        ANGLE=$(kdialog --icon configure --title "${msg_title}" --inputbox "${msg_rotate_angle_text}") ||
+            { notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
     else
         ANGLE="${value}"
     fi
@@ -933,8 +916,8 @@ init_jpeg_reencode() {
 
     JPEG_QUALITY="70"
     if [ "${value}" = "custom" ]; then
-        JPEG_QUALITY=$(${kdialog_bin} --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_reencode_quality_text}" "${JPEG_QUALITY}") ||
-            { ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
+        JPEG_QUALITY=$(kdialog --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_reencode_quality_text}" "${JPEG_QUALITY}") ||
+            { notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
     else
         JPEG_QUALITY="${value}"
     fi
@@ -953,8 +936,8 @@ init_jpeg_prepare_to_publish() {
 
     WIDTH="1920"
     if [ "${value}" = "custom" ]; then
-        WIDTH=$(${kdialog_bin} --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_prepare_to_publish_title_scale_text}" "${WIDTH}") ||
-            { ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
+        WIDTH=$(kdialog --icon configure --title "${msg_title}" --inputbox "${msg_jpeg_prepare_to_publish_title_scale_text}" "${WIDTH}") ||
+            { notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u normal "${msg_title}" "${msg_common_abort}" && exit 2; }
     else
         WIDTH="${value}"
     fi
@@ -1103,7 +1086,7 @@ gen_optimized_text_img)
     init_gen_optimized_text_img "${@}"
     ;;
 *)
-    ${notifysend_bin} -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_command_check_failed_title}" "$(eval echo "${msg_common_command_not_found_text}")"
+    notify-send -h "string:desktop-entry:org.kde.dolphin" -i image-x-generic -a "${msg_common_notify_title}" -u critical "${msg_common_command_check_failed_title}" "$(eval echo "${msg_common_command_not_found_text}")"
     exit 2
     ;;
 esac
