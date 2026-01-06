@@ -581,17 +581,16 @@ exec_png_reencode_and_optimize_lossy() {
     if [ "${overwrite}" = true ]; then
         local tmpfile=$(mktemp -p "${dir}" --suffix=".${ext}")
         cp "${inputfile}" "${tmpfile}"
-        OUTPUT=$(pngquant --quality 60-80 --output "${tmpfile}" "${inputfile}" 2>&1 && oxipng -o max "${tmpfile}" 2>&1)
+        OUTPUT=$(pngquant --quality 60-80 --speed 1 --force --ext ".${ext}" "${tmpfile}" 2>&1 && oxipng -o max "${tmpfile}" 2>&1)
         local rc=$?
         if [ $rc -ne 0 ]; then
             rm -f "${tmpfile}"
             return $rc
         fi
-        rm -f "${inputfile}"
-        mv "${tmpfile}" "${inputfile}"
+        mv -f "${tmpfile}" "${inputfile}"
     else
         outputfile="${dir}/${base}_optimized_lossy.${ext}"
-        OUTPUT=$(pngquant --quality 60-80 --output "${outputfile}" "${inputfile}" 2>&1 && oxipng -o max "${outputfile}" 2>&1)
+        OUTPUT=$(pngquant --quality 60-80 --speed 1 --force --ext ".${ext}" "${inputfile}" 2>&1 && oxipng -o max "${outputfile}" 2>&1)
     fi
 
     return $?
